@@ -1,0 +1,228 @@
+#pragma once
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <string>
+#include <initializer_list>
+#include <utility>
+#include "Vector.tpp"
+
+template <typename T> class Matrix;
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj);
+
+template <typename T> class Matrix
+{
+	public:
+	// Constructors and destructor
+
+		Matrix();
+		Matrix(const Matrix<T> & rhs);
+		Matrix(size_t cols, size_t rows);
+		Matrix(const std::initializer_list<std::initializer_list<T>> & rhs);
+		~Matrix();
+
+	// Setters and getters
+		
+
+	// Member functions
+
+		std::pair<size_t, size_t> shape() const;
+		Vector<T> toVector() const;
+
+		Matrix<T> & add(const Matrix<T> & rhs);
+		Matrix<T> & sub(const Matrix<T> & rhs);
+		Matrix<T> & scl(const T & rhs);
+
+	// Operator overloads
+
+		Matrix<T> & operator=(const Matrix<T> & rhs);
+		Vector<T> & operator[](size_t i);
+		const Vector<T> & operator[](size_t i) const;
+
+	protected:
+	private:
+	// Atributes
+
+		std::unique_ptr<Vector<T>[]> _elements; // Malloc of _cols length containing vectors of _rows length
+		size_t _rows;
+		size_t _cols;
+
+	// Private member functions
+
+
+	// Friends <3
+
+		friend std::ostream &operator<< <T>(std::ostream &os, const Matrix<T> &obj);
+		// also a print for std::pair<size_t,size_t> for shape print
+};
+
+template <typename T>
+Matrix<T>::Matrix():
+	_elements(nullptr),
+	_rows(0),
+	_cols(0)
+{}
+
+template <typename T>
+Matrix<T>::Matrix(const Matrix<T> & rhs)
+{
+	*this = rhs;
+}
+
+template <typename T>
+Matrix<T>::Matrix(size_t cols, size_t rows)
+{
+	if (cols == 0 or rows == 0)
+	{
+		_cols = _rows = 0;
+		return;
+	}
+	_rows = rows;
+	_cols = cols;
+	_elements = std::make_unique<Vector<T>[]>(cols);
+	for (size_t i = 0; i < cols; ++i)
+		_elements[i] = Vector<T>(rows);
+}
+
+template <typename T>
+Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>> & rhs)
+{
+	// Get sizes
+	_rows = rhs.size();
+	if (_rows == 0)
+		return;
+	_cols = rhs.begin()->size();
+	if (_cols == 0)
+	{
+		_rows = 0;
+		return;
+	}
+	// Allocate memory
+	_elements = std::make_unique<Vector<T>[]>(_cols);
+	for (size_t i = 0; i < _cols; ++i)
+		_elements[i] = Vector<T>(_rows);
+	// Fill values
+	size_t j = 0;
+	for (auto & row: rhs)
+	{
+		if (row.size() != _cols)
+			throw std::invalid_argument("Matrix constructor initializer_list: rows of different size");
+		size_t i = 0;
+		for (auto & col: row)
+			_elements[i++][j] = col;
+		j++;
+	}
+}
+
+template <typename T>
+Matrix<T>::~Matrix()
+{}
+
+template <typename T>
+std::pair<size_t, size_t> Matrix<T>::shape() const
+{
+    return {_cols, _rows};
+}
+
+template <typename T>
+Vector<T> Matrix<T>::toVector() const
+{
+	Vector<T> output(_rows * _cols);
+	size_t i = 0;
+	for (size_t row = 0; row < _rows; ++row)
+		for (size_t col = 0; col < _cols; ++col)
+			output[i++] = _elements[col][row];
+	return output;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::add(const Matrix<T> & rhs)
+{
+	if (this->shape() != rhs.shape())
+		throw std::invalid_argument("Matrix ::add: shape mismatch");
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].add(rhs[col]);
+
+	return *this;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::sub(const Matrix<T> & rhs)
+{
+	if (this->shape() != rhs.shape())
+		throw std::invalid_argument("Matrix::sub shape mismatch");
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].sub(rhs[col]);
+
+	return *this;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::scl(const T & rhs)
+{
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].scl(rhs);
+
+	return *this;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::operator=(const Matrix<T> & rhs)
+{
+	_rows = rhs._rows;
+	_cols = rhs._cols;
+	_elements = std::make_unique<Vector<T>[]>(_cols);
+	for (size_t i = 0; i < _cols; ++i)
+		_elements[i] = rhs[i];
+	return *this;
+}
+
+template <typename T>
+Vector<T> & Matrix<T>::operator[](size_t i)
+{
+	if (i >= _cols)
+		throw std::out_of_range("Matrix::[] out of range");
+	return _elements[i];
+}
+
+template <typename T>
+const Vector<T> & Matrix<T>::operator[](size_t i) const
+{
+	if (i >= _cols)
+		throw std::out_of_range("Matrix::[] out of range");
+	return _elements[i];
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj)
+{
+	if (obj._cols == 0 or obj._rows == 0)
+	{
+		os << "[[]]";
+		return os;
+	}
+	os << "[";
+	for (size_t row = 0; row < obj._rows; ++row)
+	{
+		os << "[";
+		for (size_t col = 0; col < obj._cols; ++col)
+		{
+			os << obj[col][row];
+			if (col != obj._cols - 1)
+				os << " ";
+		}
+		os << "]";
+		if (row != obj._rows - 1)
+			os << std::endl;
+	}
+	os << "]";
+	return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const std::pair<size_t, size_t> &obj)
+{
+	os << "(" << obj.first << ", " << obj.second << ")";
+	return os;
+}
