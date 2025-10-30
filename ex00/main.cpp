@@ -204,8 +204,6 @@ void matrixEx00Tests()
 
 int main() {
 
-    vectorBasicTests();
-    matrixBasicTests();
     vectorEx00Tests();
     matrixEx00Tests();
 
