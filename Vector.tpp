@@ -245,7 +245,20 @@ Vector<T> Vector<T>::linear_combination(
 	std::initializer_list<T> coefs
 )
 {
-	(void) u;
-	(void) coefs;
-	return Vector<T>();	
+	if (u.size() == 0)
+		return Vector<T>();
+	if (u.size() != coefs.size())
+		throw std::runtime_error("Vector::linear_combination different \"u\" and \"coefs\" sizes.");
+	Vector<T> output(u.begin()->size());
+	auto uIt = u.begin();
+	auto coefsIt = coefs.begin();
+	do
+	{
+		Vector<T> vScaled(*uIt);
+		vScaled.scl(*coefsIt);
+		output.add(vScaled);
+		++uIt;
+		++coefsIt;
+	} while(uIt != u.end());
+	return output;	
 }

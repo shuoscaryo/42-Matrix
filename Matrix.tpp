@@ -24,6 +24,12 @@ class Matrix
 		Matrix(const std::initializer_list<std::initializer_list<T>> & rhs);
 		~Matrix();
 
+	// Operator overloads
+
+		Matrix<T> & operator=(const Matrix<T> & rhs);
+		Vector<T> & operator[](size_t i);
+		const Vector<T> & operator[](size_t i) const;
+
 	// Setters and getters
 		
 
@@ -32,15 +38,11 @@ class Matrix
 		std::pair<size_t, size_t> shape() const;
 		Vector<T> toVector() const;
 
+		// ex00
+
 		Matrix<T> & add(const Matrix<T> & rhs);
 		Matrix<T> & sub(const Matrix<T> & rhs);
 		Matrix<T> & scl(const T & rhs);
-
-	// Operator overloads
-
-		Matrix<T> & operator=(const Matrix<T> & rhs);
-		Vector<T> & operator[](size_t i);
-		const Vector<T> & operator[](size_t i) const;
 
 	protected:
 	private:
@@ -58,6 +60,8 @@ class Matrix
 		friend std::ostream &operator<< <T>(std::ostream &os, const Matrix<T> &obj);
 		// also a print for std::pair<size_t,size_t> for shape print
 };
+
+// CONSTRUCTORS
 
 template <typename T>
 Matrix<T>::Matrix():
@@ -121,53 +125,7 @@ template <typename T>
 Matrix<T>::~Matrix()
 {}
 
-template <typename T>
-std::pair<size_t, size_t> Matrix<T>::shape() const
-{
-    return {_cols, _rows};
-}
-
-template <typename T>
-Vector<T> Matrix<T>::toVector() const
-{
-	Vector<T> output(_rows * _cols);
-	size_t i = 0;
-	for (size_t row = 0; row < _rows; ++row)
-		for (size_t col = 0; col < _cols; ++col)
-			output[i++] = _elements[col][row];
-	return output;
-}
-
-template <typename T>
-Matrix<T> & Matrix<T>::add(const Matrix<T> & rhs)
-{
-	if (this->shape() != rhs.shape())
-		throw std::invalid_argument("Matrix ::add: shape mismatch");
-	for (size_t col = 0; col < _cols; ++col)
-		_elements[col].add(rhs[col]);
-
-	return *this;
-}
-
-template <typename T>
-Matrix<T> & Matrix<T>::sub(const Matrix<T> & rhs)
-{
-	if (this->shape() != rhs.shape())
-		throw std::invalid_argument("Matrix::sub shape mismatch");
-	for (size_t col = 0; col < _cols; ++col)
-		_elements[col].sub(rhs[col]);
-
-	return *this;
-}
-
-template <typename T>
-Matrix<T> & Matrix<T>::scl(const T & rhs)
-{
-	for (size_t col = 0; col < _cols; ++col)
-		_elements[col].scl(rhs);
-
-	return *this;
-}
+// OPERATORS
 
 template <typename T>
 Matrix<T> & Matrix<T>::operator=(const Matrix<T> & rhs)
@@ -224,4 +182,56 @@ std::ostream &operator<<(std::ostream &os, const std::pair<size_t, size_t> &obj)
 {
 	os << "(" << obj.first << ", " << obj.second << ")";
 	return os;
+}
+
+// MEMBER FUNCTIONS
+
+template <typename T>
+std::pair<size_t, size_t> Matrix<T>::shape() const
+{
+    return {_cols, _rows};
+}
+
+template <typename T>
+Vector<T> Matrix<T>::toVector() const
+{
+	Vector<T> output(_rows * _cols);
+	size_t i = 0;
+	for (size_t row = 0; row < _rows; ++row)
+		for (size_t col = 0; col < _cols; ++col)
+			output[i++] = _elements[col][row];
+	return output;
+}
+
+// EX00
+
+template <typename T>
+Matrix<T> & Matrix<T>::add(const Matrix<T> & rhs)
+{
+	if (this->shape() != rhs.shape())
+		throw std::invalid_argument("Matrix ::add: shape mismatch");
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].add(rhs[col]);
+
+	return *this;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::sub(const Matrix<T> & rhs)
+{
+	if (this->shape() != rhs.shape())
+		throw std::invalid_argument("Matrix::sub shape mismatch");
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].sub(rhs[col]);
+
+	return *this;
+}
+
+template <typename T>
+Matrix<T> & Matrix<T>::scl(const T & rhs)
+{
+	for (size_t col = 0; col < _cols; ++col)
+		_elements[col].scl(rhs);
+
+	return *this;
 }
