@@ -123,9 +123,12 @@ void matrixBasicTests()
             std::cout << "Matrix<int>():\n" << Matrix<int>() << "\n";
             std::cout << "Matrix<int>(0,0):\n" << Matrix<int>(0,0) << "\n";
             std::cout << "Matrix<int>(3,2):\n" << Matrix<int>(3,2) << "\n";
-            std::cout << "Matrix<float>(5,5):\n" << Matrix<float>(5,5) << "\n";
-            std::cout << "Matrix<int>{{1,2},{3,5}}:\n" << Matrix<int>{{1,2},{3,5}} << "\n";
-            std::cout << "Matrix<float>(Matrix<float>{{1,2},{3,5}}):\n" << Matrix<float>(Matrix<float>{{1,2},{3,5}}) << "\n";
+            std::cout << "Matrix<float>(Matrix<float>(3,2).shape()):\n" <<
+                Matrix<float>(Matrix<float>(3,2).shape()) << "\n";
+            std::cout << "Matrix<int>{{1,2},{3,5}}:\n" <<
+                Matrix<int>{{1,2},{3,5}} << "\n";
+            std::cout << "Matrix<float>(Matrix<float>{{1,2},{3,5}}):\n" <<
+                Matrix<float>(Matrix<float>{{1,2},{3,5}}) << "\n";
         }
     );
     Test::add("Copy Constructor",

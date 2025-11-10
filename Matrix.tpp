@@ -21,6 +21,7 @@ class Matrix
 		Matrix();
 		Matrix(const Matrix<T> & rhs);
 		Matrix(size_t cols, size_t rows);
+		Matrix(std::pair<size_t, size_t> shape);
 		Matrix(const std::initializer_list<std::initializer_list<T>> & rhs);
 		~Matrix();
 
@@ -43,6 +44,13 @@ class Matrix
 		Matrix<T> & add(const Matrix<T> & rhs);
 		Matrix<T> & sub(const Matrix<T> & rhs);
 		Matrix<T> & scl(const T & rhs);
+
+		// ex01
+
+		static Matrix<T> linear_combination(
+			std::initializer_list<Matrix<T>> u,
+			std::initializer_list<T> coefs
+		);
 
 	protected:
 	private:
@@ -90,6 +98,11 @@ Matrix<T>::Matrix(size_t cols, size_t rows)
 	for (size_t i = 0; i < cols; ++i)
 		_elements[i] = Vector<T>(rows);
 }
+
+template <typename T>
+Matrix<T>::Matrix(std::pair<size_t, size_t> shape):
+	Matrix(shape.first, shape.second)
+{}
 
 template <typename T>
 Matrix<T>::Matrix(const std::initializer_list<std::initializer_list<T>> & rhs)
@@ -234,4 +247,30 @@ Matrix<T> & Matrix<T>::scl(const T & rhs)
 		_elements[col].scl(rhs);
 
 	return *this;
+}
+
+// EX01
+
+template <typename T>
+Matrix<T> Matrix<T>::linear_combination(
+	std::initializer_list<Matrix<T>> u,
+	std::initializer_list<T> coefs
+)
+{
+	if (u.size() == 0)
+		return Matrix<T>();
+	if (u.size() != coefs.size())
+		throw std::runtime_error("Matrix::linear_combination different \"u\" and \"coefs\" sizes.");
+	Matrix<T> output(u.begin()->shape());
+	auto uIt = u.begin();
+	auto coefsIt = coefs.begin();
+	do
+	{
+		Matrix<T> vScaled(*uIt);
+		vScaled.scl(*coefsIt);
+		output.add(vScaled);
+		++uIt;
+		++coefsIt;
+	} while(uIt != u.end());
+	return output;	
 }
