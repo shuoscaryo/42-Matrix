@@ -11,7 +11,8 @@ template <typename T> class Vector;
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Vector<T> &obj);
 
-template <typename T> class Vector
+template <typename T>
+class Vector
 {
 	public:
 	// Constructors and destructor
@@ -36,9 +37,19 @@ template <typename T> class Vector
 		size_t size() const;
 		Matrix<T> toMatrix(size_t cols, size_t rows) const;
 
+		// ex00
+
 		Vector<T> & add(const Vector<T> & rhs);
 		Vector<T> & sub(const Vector<T> & rhs);
 		Vector<T> & scl(const T & rhs);
+
+		// ex01
+
+		static Vector<T> linear_combination(
+			std::initializer_list<Vector<T>> u,
+			std::initializer_list<T> coefs
+		);
+
 
 	protected:
 	private:
@@ -54,6 +65,22 @@ template <typename T> class Vector
 
 		friend std::ostream &operator<< <T>(std::ostream &os, const Vector<T> &obj);
 };
+
+// wrapper for printing inline
+template<class T>
+struct inlineVectorPrint
+{
+	const Vector<T>& v;
+};
+
+// Helper so it's shorter
+template<class T>
+inlineVectorPrint<T> ivp(const Vector<T>& v)
+{
+	return inlineVectorPrint<T>{v};
+}
+
+// CONSTRUCTORS
 
 template <typename T>
 Vector<T>::Vector():
@@ -87,6 +114,8 @@ template <typename T>
 Vector<T>::~Vector()
 {}
 
+// OPERATORS
+
 template <typename T>
 Vector<T> & Vector<T>::operator=(const Vector<T> & rhs)
 {
@@ -116,6 +145,47 @@ const T & Vector<T>::operator[](size_t i) const
 }
 
 template <typename T>
+std::ostream &operator<<(std::ostream &os, const Vector<T> &obj)
+{
+	if (obj.size() == 0)
+	{
+		os << "[]";
+		return os;
+	}
+
+	for (size_t i = 0; i < obj.size(); ++i)
+	{
+		os << "[" << obj[i] << "]";
+		if (i != obj.size() - 1)
+		os << "\n";
+	}
+		
+	return os;
+}
+
+template <typename T>
+std::ostream &operator<<(
+	std::ostream &os,
+	const inlineVectorPrint<T> &obj
+){
+	const Vector<T>& v = obj.v;
+	if (v.size() == 0)
+	{
+		os << "[]";
+		return os;
+	}
+
+	os << "[";
+	for (size_t i = 0; i < v.size() - 1; ++i)
+		os << v[i] << " ";
+	os << v[v.size() - 1] << "]";
+		
+	return os;
+}
+
+// MEMBER FUNCTIONS
+
+template <typename T>
 size_t Vector<T>::size() const
 {
 	return _size;
@@ -133,6 +203,8 @@ Matrix<T> Vector<T>::toMatrix(size_t cols, size_t rows) const
 			output[i][j] = _elements[k++];
 	return output;
 }
+
+// EX00
 
 template <typename T>
 Vector<T> & Vector<T>::add(const Vector<T> & rhs)
@@ -165,19 +237,15 @@ Vector<T> & Vector<T>::scl(const T & rhs)
 	return *this;
 }
 
-template <typename T>
-std::ostream &operator<<(std::ostream &os, const Vector<T> &obj)
-{
-	if (obj.size() == 0)
-	{
-		os << "[]";
-		return os;
-	}
+// EX01
 
-	os << "[";
-	for (size_t i = 0; i < obj.size() - 1; ++i)
-		os << obj[i] << " ";
-	os << obj[obj.size() - 1] << "]";
-		
-	return os;
+template <typename T>
+Vector<T> Vector<T>::linear_combination(
+	std::initializer_list<Vector<T>> u,
+	std::initializer_list<T> coefs
+)
+{
+	(void) u;
+	(void) coefs;
+	return Vector<T>();	
 }

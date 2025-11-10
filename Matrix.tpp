@@ -12,7 +12,8 @@ template <typename T> class Matrix;
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj);
 
-template <typename T> class Matrix
+template <typename T>
+class Matrix
 {
 	public:
 	// Constructors and destructor
@@ -200,10 +201,9 @@ std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj)
 {
 	if (obj._cols == 0 or obj._rows == 0)
 	{
-		os << "[[]]";
+		os << "[]";
 		return os;
 	}
-	os << "[";
 	for (size_t row = 0; row < obj._rows; ++row)
 	{
 		os << "[";
@@ -217,7 +217,6 @@ std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj)
 		if (row != obj._rows - 1)
 			os << std::endl;
 	}
-	os << "]";
 	return os;
 }
 

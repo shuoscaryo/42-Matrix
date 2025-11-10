@@ -9,38 +9,47 @@
 void vectorBasicTests()
 {
     Test::header("Vector Basic Tests");
+    Test::add("Normal and Inline prints",
+        []() -> void {
+            Vector<float> A{1,2,3};
+            std::cout << "A{1,2,3}" << "\n";
+            std::cout << "inline print (wrapper):\n" << ivp(A) << "\n";
+            std::cout << "normal print \"std::cout << A\":\n" << A << "\n";
+        }
+    );
     Test::add("Constructors",
         []() -> void {
-            std::cout << "Vector<int>()     : " << Vector<int>() << "\n";
-            std::cout << "Vector<int>(0)    : " << Vector<int>(0) << "\n";
-            std::cout << "Vector<int>(3)    : " << Vector<int>(3) << "\n";
-            std::cout << "Vector<float>(5)  : " << Vector<float>(5) << "\n";
-            std::cout << "Vector<char>(5)   : " << Vector<char>(5) << "\n";
-            std::cout << "Vector<int>{1,2,3}: " << Vector<int>{1,2,3} << "\n";
-            std::cout << "Vector<float>(Vector<float>{1,2,3}): " << Vector<float>(Vector<float>{1,2,3}) << "\n";
+            std::cout << "Vector<int>(): " << ivp(Vector<int>()) << "\n";
+            std::cout << "Vector<int>(0): " << ivp(Vector<int>(0)) << "\n";
+            std::cout << "Vector<int>(3): " << ivp(Vector<int>(3)) << "\n";
+            std::cout << "Vector<float>(5): " << ivp(Vector<float>(5)) << "\n";
+            std::cout << "Vector<char>(5): " << ivp(Vector<char>(5)) << "\n";
+            std::cout << "Vector<int>{1,2,3}: " << ivp(Vector<int>{1,2,3}) << "\n";
+            std::cout << "Vector<float>(Vector<float>{1,2,3}): " <<
+                ivp(Vector<float>(Vector<float>{1,2,3})) << "\n";
         }
     );
     Test::add("Copy Constructor",
         []() -> void {
             Vector<float> A{1,2,3};
             Vector<float> B{4,5,6};
-            std::cout << "A: " << A << "\n";
-            std::cout << "B: " << B << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
+            std::cout << "B: " << ivp(B) << "\n";
             std::cout << "A = B\n";
             A = B;
-            std::cout << "A: " << A << "\n";
-            std::cout << "B: " << B << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
+            std::cout << "B: " << ivp(B) << "\n";
             std::cout << "A[2] = 12, B[1] = 9\n";
             A[2] = 12;
             B[1] = 9;
-            std::cout << "A: " << A << "\n";
-            std::cout << "B: " << B << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
+            std::cout << "B: " << ivp(B) << "\n";
         }
     );
     Test::add("Element Access",
         []() -> void {
             Vector<float> A{1,2,3,4,5,6};
-            std::cout << "A:\n" << A << "\n";
+            std::cout << "A:\n" << ivp(A) << "\n";
             std::cout << "A[0]: " << A[0] << "\n";
             std::cout << "A[1]: " << A[1] << "\n";
             std::cout << "A[2]: " << A[2] << "\n";
@@ -52,31 +61,31 @@ void vectorBasicTests()
     Test::add("Index out of bounds",
         []() -> void {
             Vector<float> A{1,2,3,4,5,6};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A[6]: " << A[6] << "\n";
         }
     );
     Test::add("Index out of bounds",
         []() -> void {
             Vector<float> A{1,2,3,4,5,6};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A[-1]: " << A[-1] << "\n";
         }
     );
     Test::add("size",
         []() -> void {
             Vector<float> A{1,2,3};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A.size(): " << A.size() << "\n";
             Vector<float> B{};
-            std::cout << "B: " << B << "\n";
+            std::cout << "B: " << ivp(B) << "\n";
             std::cout << "B.size(): " << B.size() << "\n";
         }
     );
     Test::add("toMatrix ok",
         []() -> void {
             Vector<float> A{1,2,3,4};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A.toMatrix(2,2):\n" << A.toMatrix(2,2) << "\n";
             std::cout << "A.toMatrix(4,1):\n" << A.toMatrix(4,1) << "\n";
             std::cout << "A.toMatrix(1,4):\n" << A.toMatrix(1,4) << "\n";
@@ -85,15 +94,22 @@ void vectorBasicTests()
     Test::add("toMatrix not ok",
         []() -> void {
             Vector<float> A{1,2,3,4};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A.toMatrix(1,5):\n" << A.toMatrix(1,5) << "\n";
         }
     );
     Test::add("toMatrix not ok",
         []() -> void {
             Vector<float> A{1,2,3,4};
-            std::cout << "A: " << A << "\n";
+            std::cout << "A: " << ivp(A) << "\n";
             std::cout << "A.toMatrix(2,3):\n" << A.toMatrix(2,3) << "\n";
+        }
+    );
+    Test::add("toMatrix not ok",
+        []() -> void {
+            Vector<float> A{1,2,3,4};
+            std::cout << "A: " << ivp(A) << "\n";
+            std::cout << "A.toMatrix(0,4):\n" << A.toMatrix(2,3) << "\n";
         }
     );
 }
@@ -138,8 +154,8 @@ void matrixBasicTests()
         []() -> void {
             Matrix<float> A{{1,2},{3,4},{5,6}};
             std::cout << "A:\n" << A << "\n";
-            std::cout << "A[0]: " << A[0] << "\n";
-            std::cout << "A[1]: " << A[1] << "\n";
+            std::cout << "A[0]:\n" << A[0] << "\n";
+            std::cout << "A[1]:\n" << A[1] << "\n";
             std::cout << "A[0][0]: " << A[0][0] << "\n";
             std::cout << "A[0][1]: " << A[0][1] << "\n";
             std::cout << "A[0][2]: " << A[0][2] << "\n";
@@ -176,10 +192,10 @@ void matrixBasicTests()
         []() -> void {
             Matrix<float> A{{1,2},{3,4},{5,6}};
             std::cout << "A:\n" << A << "\n";
-            std::cout << "A.toVector(): " << A.toVector() << "\n";
+            std::cout << "A.toVector(): " << ivp(A.toVector()) << "\n";
             Matrix<float> B{};
             std::cout << "B:\n" << B << "\n";
-            std::cout << "B.toVector(): " << B.toVector() << "\n";
+            std::cout << "B.toVector(): " << ivp(B.toVector()) << "\n";
         }
     );
     Test::add("toVector and back!",
@@ -187,7 +203,7 @@ void matrixBasicTests()
             Matrix<float> A{{1,2},{3,4},{5,6}};
             std::cout << "A:\n" << A << "\n";
             Vector<float> B = A.toVector();
-            std::cout << "B = A.toVector(): " << B << "\n";
+            std::cout << "B = A.toVector(): " << ivp(B) << "\n";
             std::cout << "B.toMatrix(2,3):\n" << B.toMatrix(2,3) << "\n";
         }
     );
