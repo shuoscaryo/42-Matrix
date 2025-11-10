@@ -28,6 +28,9 @@ class Vector
 		Vector<T> & operator=(const Vector<T> & rhs);
 		T & operator[](size_t i);
 		const T & operator[](size_t i) const;
+		Vector<T> operator+(const Vector<T> & rhs);
+		Vector<T> operator-(const Vector<T> & rhs);
+		Vector<T> operator*(const T & rhs);
 
 	// Setters and getters	
 
@@ -37,19 +40,11 @@ class Vector
 		size_t size() const;
 		Matrix<T> toMatrix(size_t cols, size_t rows) const;
 
-		// ex00
-
 		Vector<T> & add(const Vector<T> & rhs);
 		Vector<T> & sub(const Vector<T> & rhs);
 		Vector<T> & scl(const T & rhs);
 
-		// ex01
-
-		static Vector<T> linear_combination(
-			std::initializer_list<Vector<T>> u,
-			std::initializer_list<T> coefs
-		);
-
+		T dot(const Vector<T> & rhs) const;
 
 	protected:
 	private:
@@ -143,6 +138,31 @@ const T & Vector<T>::operator[](size_t i) const
 		throw std::out_of_range("Vector::[] out of range");
 	return _elements[i];
 }
+
+template <typename T>
+Vector<T> Vector<T>::operator+(const Vector<T> & rhs)
+{
+	Vector<T> output = *this;
+	output.add(rhs);
+	return output;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator-(const Vector<T> & rhs)
+{
+	Vector<T> output = *this;
+	output.sub(rhs);
+	return output;
+}
+
+template <typename T>
+Vector<T> Vector<T>::operator*(const T & rhs)
+{
+	Vector<T> output = *this;
+	output.scl(rhs);
+	return output;
+}
+
 
 template <typename T>
 std::ostream &operator<<(std::ostream &os, const Vector<T> &obj)
@@ -240,7 +260,7 @@ Vector<T> & Vector<T>::scl(const T & rhs)
 // EX01
 
 template <typename T>
-Vector<T> Vector<T>::linear_combination(
+Vector<T> linear_combination(
 	std::initializer_list<Vector<T>> u,
 	std::initializer_list<T> coefs
 )
@@ -261,4 +281,27 @@ Vector<T> Vector<T>::linear_combination(
 		++coefsIt;
 	} while(uIt != u.end());
 	return output;	
+}
+
+// EX02
+
+template <typename V>
+V lerp(V u, V v, float t)
+{
+	return u + (v - u) * t;
+}
+
+// EX03
+
+template <typename T>
+T Vector<T>::dot(const Vector<T> & rhs) const
+{
+	if (this->size() != rhs.size())
+        throw std::invalid_argument("Vector::dot vectors must have same size");
+	if (this->size() == 0)
+		return T{};
+	T output = _elements[0] * rhs[0];
+	for (size_t i = 1; i < this->size(); ++i)
+		output += _elements[i] * rhs[i];
+	return output;
 }

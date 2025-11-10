@@ -30,6 +30,9 @@ class Matrix
 		Matrix<T> & operator=(const Matrix<T> & rhs);
 		Vector<T> & operator[](size_t i);
 		const Vector<T> & operator[](size_t i) const;
+		Matrix<T> operator+(const Matrix<T> & rhs);
+		Matrix<T> operator-(const Matrix<T> & rhs);
+		Matrix<T> operator*(const T & rhs);
 
 	// Setters and getters
 		
@@ -39,18 +42,10 @@ class Matrix
 		std::pair<size_t, size_t> shape() const;
 		Vector<T> toVector() const;
 
-		// ex00
-
 		Matrix<T> & add(const Matrix<T> & rhs);
 		Matrix<T> & sub(const Matrix<T> & rhs);
 		Matrix<T> & scl(const T & rhs);
 
-		// ex01
-
-		static Matrix<T> linear_combination(
-			std::initializer_list<Matrix<T>> u,
-			std::initializer_list<T> coefs
-		);
 
 	protected:
 	private:
@@ -168,6 +163,30 @@ const Vector<T> & Matrix<T>::operator[](size_t i) const
 }
 
 template <typename T>
+Matrix<T> Matrix<T>::operator+(const Matrix<T> & rhs)
+{
+	Matrix<T> output = *this;
+	output.add(rhs);
+	return output;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator-(const Matrix<T> & rhs)
+{
+	Matrix<T> output = *this;
+	output.sub(rhs);
+	return output;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::operator*(const T & rhs)
+{
+	Matrix<T> output = *this;
+	output.scl(rhs);
+	return output;
+}
+
+template <typename T>
 std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj)
 {
 	if (obj._cols == 0 or obj._rows == 0)
@@ -252,7 +271,7 @@ Matrix<T> & Matrix<T>::scl(const T & rhs)
 // EX01
 
 template <typename T>
-Matrix<T> Matrix<T>::linear_combination(
+Matrix<T> linear_combination(
 	std::initializer_list<Matrix<T>> u,
 	std::initializer_list<T> coefs
 )
