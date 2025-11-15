@@ -19,7 +19,7 @@ void myTests()
 	Test::add("",
 		cosHelper<float>,
 		Vector<float>{1,1,1},
-		Vector<float>{1,1,-1}
+		Vector<float>{1,1,-2}
 	);
 }
 void subjectTests()
@@ -50,5 +50,6 @@ void subjectTests()
 int main()
 {
 	subjectTests();
+	myTests();
 	return 0;
 }
