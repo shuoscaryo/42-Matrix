@@ -13,6 +13,15 @@ void cosHelper(Vector<T> u, Vector<T> v)
 	std::cout << "cos(u,v): " << angle_cos(u,v) << "\n";
 }
 
+void myTests()
+{
+	Test::header("dot product my tests");
+	Test::add("",
+		cosHelper<float>,
+		Vector<float>{1,1,1},
+		Vector<float>{1,1,-1}
+	);
+}
 void subjectTests()
 {
 	Test::header("dot product subject tests");
