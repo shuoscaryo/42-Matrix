@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <string>
 #include <initializer_list>
+#include <cmath> // used in allowed functions
 
 template<typename T> class Matrix;
 template <typename T> class Vector;
@@ -45,6 +46,10 @@ class Vector
 		Vector<T> & scl(const T & rhs);
 
 		T dot(const Vector<T> & rhs) const;
+
+		float norm_1() const;
+		float norm() const;
+		float norm_inf() const;
 
 	protected:
 	private:
@@ -303,5 +308,62 @@ T Vector<T>::dot(const Vector<T> & rhs) const
 	T output = _elements[0] * rhs[0];
 	for (size_t i = 1; i < this->size(); ++i)
 		output += _elements[i] * rhs[i];
+	return output;
+}
+
+// EX04
+
+template <typename T>
+float Vector<T>::norm_1() const
+{
+	// Defined as:
+	//     norm_1 = Σ |v[i]|
+	// First you gotta move one axis, then next, then next...
+	// like a taxi in NY moving in the grid, can't cross the buildings
+	// Distance if parallel axis movement is completely restricted
+	float output = 0;
+	for (size_t i = 0; i < size(); ++i)
+	{
+		float val = (_elements[i] > 0 ? _elements[i] : - _elements[i]);
+		output += val;
+	}
+	return output;
+}
+
+template <typename T>
+float Vector<T>::norm() const
+{
+	// Defined as:
+	//     norm = sqrt(Σ |v[i]|^2)
+	// Usual distance calculation, can go on all axis at once but each axis
+	// speed is limited relative to movement speed
+	// Distance if parallel axis movement is allowed but the energy is capped
+	// at the same value on all directions
+	float output = 0;
+	for (size_t i = 0; i < size(); ++i)
+	{
+		float val = (_elements[i] > 0 ? _elements[i] : - _elements[i]);
+		output += val * val;
+	}
+	// Math lib used here (subject)
+	output = pow(output, 0.5);
+	return output;
+}
+
+template <typename T>
+float Vector<T>::norm_inf() const
+{
+	// Defined as:
+	//     norm = max(|v|)
+	// You can move on all axis independently, like a 3D printer that a
+	// movement takes as much as the furthest point in an axis
+	// Distance if parallel axis movement is allowed and no inter axix
+	// restrictions
+	float output = 0;
+	for (size_t i = 0; i < size(); ++i)
+	{
+		float val = (_elements[i] > 0 ? _elements[i] : - _elements[i]);
+		output = (val > output ? val : output);
+	}
 	return output;
 }
