@@ -301,6 +301,9 @@ V lerp(V u, V v, float t)
 template <typename T>
 T Vector<T>::dot(const Vector<T> & rhs) const
 {
+	// Defined as:
+	// dot = Σ v[i] * u[i]
+	// Used for when 
 	if (this->size() != rhs.size())
         throw std::invalid_argument("Vector::dot vectors must have same size");
 	if (this->size() == 0)
@@ -366,4 +369,14 @@ float Vector<T>::norm_inf() const
 		output = (val > output ? val : output);
 	}
 	return output;
+}
+
+// EX05
+
+template <typename T>
+float angle_cos(const Vector<T> & u, const Vector<T> & v)
+{
+	// dot(U,V) = mod(U) * mod(V) * cos(O)
+	// cos = dot(U,V) / (mod(U) * mod(V))
+	return u.dot(v) / (u.norm() * v.norm());
 }
