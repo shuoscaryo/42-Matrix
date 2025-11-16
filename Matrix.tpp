@@ -54,6 +54,8 @@ class Matrix
 
 		Matrix<T> transpose() const;
 
+		Matrix<T> row_echelon() const;
+
 
 	protected:
 	private:
@@ -380,3 +382,75 @@ Matrix<T> Matrix<T>::transpose() const
 
 // EX10
 
+template <typename T>
+static int _findNonZeroRow(const Matrix<T> & A, size_t from, size_t col)
+{
+	// returns the first row whose [col] position is not 0.
+	const size_t rowLen = A.shape().first;
+	for (size_t row = from; row < rowLen; ++row)
+		if (A[col][row] != 0)
+			return row;
+	return -1;
+}
+
+template <typename T>
+static void _swapRows(Matrix<T> &A, size_t row1, size_t row2)
+{
+	const size_t colLen = A.shape().second;
+	for (size_t col = 0; col < colLen; ++col)
+		std::swap(A[col][row1], A[col][row2]);
+}
+
+template <typename T>
+static void _scaleRow(Matrix<T> &A, size_t row, size_t col)
+{
+	const T multiplier = A[col][row];
+	const size_t colLen = A.shape().second;
+	// Divide the whole row by the first element, so the first one becomes 1
+	for (size_t i = col; i < colLen; ++i)
+		A[i][row] /= multiplier;
+}
+
+template <typename T>
+static void _reduceRow(Matrix<T> &A, size_t refRow, size_t row, size_t col)
+{
+	// if the target row starts already with 0 no need to reduce
+	if (A[col][row] == 0)
+		return;
+	// What factor to multiply the refRow so substracting it to row removes
+	// the col component
+	const T multiplier = A[col][row] / A[col][refRow];
+	const size_t colLen = A.shape().second;
+	// substract the refRow multiplied to the target row
+	for (size_t i = col; i < colLen; ++i)
+		A[i][row] -= A[i][refRow] * multiplier;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::row_echelon() const
+{
+	Matrix<T> output((*this));
+	// work_row is the first row from where perform operations 
+	size_t work_row = 0;
+	// Iterate columns to remove every element but the pivot
+	// up to _cols - 1 because the last row won't simplify other rows
+	for (size_t col = 0; col < this->_cols; ++col)
+	{
+		// Find first row that has a value different than 0 to use as pivot
+		const int pivotRow = _findNonZeroRow(output, work_row, col);
+		if (pivotRow == -1)
+			continue;
+		// If the row used as pivot is not the first, make it first
+		if (pivotRow != int(work_row))
+			_swapRows(output, pivotRow, work_row);
+		// Scale the row so it starts with 1
+		_scaleRow(output, work_row, col);
+		// simplify rest of rows in same column
+		for (size_t row = 0; row < this->_rows; ++row)
+			if (row != work_row)
+				_reduceRow(output, work_row, row, col);
+		// update the work row so the current pivot is not used no more
+		++work_row;
+	}
+	return output;
+}
