@@ -377,3 +377,6 @@ Matrix<T> Matrix<T>::transpose() const
 	}
 	return output;
 }
+
+// EX10
+
