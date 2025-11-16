@@ -350,12 +350,12 @@ Matrix<T> Matrix<T>::mul_mat(const Matrix<T> & mat) const
 // EX08
 
 template <typename T>
-T Matrix::trace() const
+T Matrix<T>::trace() const
 {
 	if (_cols == 0)
 		return T{};
-	T output = _cols[0][0]
+	T output = (*this)[0][0];
 	for (size_t i = 0; i < _cols; ++i)
-		output += _cols[i][i];
-	return T
+		output += (*this)[i][i];
+	return output;
 }
