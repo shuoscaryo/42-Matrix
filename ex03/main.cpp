@@ -15,7 +15,7 @@ void dotHelper(Vector<T> u, const Vector<T> &v)
 
 void subjectTests()
 {
-	Test::header("dot product subject tests");
+	Test::header("subject tests");
 	Test::add("",
 		dotHelper<float>,
 		Vector<float>{0,0},

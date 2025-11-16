@@ -17,7 +17,7 @@ void lerpHelper(const V &u, const V &v, float t)
 
 void subjectTests()
 {
-	Test::header("Lerp Subject Tests");
+	Test::header("Subject Tests");
 	Test::add("",
 		lerpHelper<float>,
 		0,

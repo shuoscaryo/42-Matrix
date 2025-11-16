@@ -20,7 +20,7 @@ class Matrix
 
 		Matrix();
 		Matrix(const Matrix<T> & rhs);
-		Matrix(size_t cols, size_t rows);
+		Matrix(size_t rows, size_t cols);
 		Matrix(std::pair<size_t, size_t> shape);
 		Matrix(const std::initializer_list<std::initializer_list<T>> & rhs);
 		~Matrix();
@@ -45,6 +45,9 @@ class Matrix
 		Matrix<T> & add(const Matrix<T> & rhs);
 		Matrix<T> & sub(const Matrix<T> & rhs);
 		Matrix<T> & scl(const T & rhs);
+
+		Vector<T> mul_vec(const Vector<T> & vec) const;
+		Matrix<T> mul_mat(const Matrix<T> & mat) const;
 
 
 	protected:
@@ -80,7 +83,7 @@ Matrix<T>::Matrix(const Matrix<T> & rhs)
 }
 
 template <typename T>
-Matrix<T>::Matrix(size_t cols, size_t rows)
+Matrix<T>::Matrix(size_t rows, size_t cols)
 {
 	if (cols == 0 or rows == 0)
 	{
@@ -221,7 +224,7 @@ std::ostream &operator<<(std::ostream &os, const std::pair<size_t, size_t> &obj)
 template <typename T>
 std::pair<size_t, size_t> Matrix<T>::shape() const
 {
-    return {_cols, _rows};
+    return {_rows, _cols};
 }
 
 template <typename T>
@@ -279,7 +282,7 @@ Matrix<T> linear_combination(
 	if (u.size() == 0)
 		return Matrix<T>();
 	if (u.size() != coefs.size())
-		throw std::runtime_error("Matrix::linear_combination different \"u\" and \"coefs\" sizes.");
+		throw std::runtime_error("linear_combination different \"u\" and \"coefs\" sizes.");
 	Matrix<T> output(u.begin()->shape());
 	auto uIt = u.begin();
 	auto coefsIt = coefs.begin();
@@ -292,4 +295,45 @@ Matrix<T> linear_combination(
 		++coefsIt;
 	} while(uIt != u.end());
 	return output;	
+}
+
+// EX07
+
+template <typename T>
+Vector<T> Matrix<T>::mul_vec(const Vector<T> & vec) const
+{
+	if (this->_cols != vec.size())
+		throw std::runtime_error("Matrix::mul_vec Matrix columns must be same as vec size");
+	Vector<T> output(this->_rows);
+	for (size_t row = 0; row < this->_rows; ++row)
+	{
+		T sum = (*this)[0][row] * vec[0];
+		for (size_t col = 1; col < this->_cols; ++col)
+			sum += (*this)[col][row] * vec[col];
+		output[row] = sum;
+	}
+	return output;
+}
+
+template <typename T>
+Matrix<T> Matrix<T>::mul_mat(const Matrix<T> & mat) const
+{
+	if (this->_cols != mat._rows or this->_cols != mat._cols)
+		throw std::runtime_error("Matrix::mul_mat Invalid shapes to multiply");
+	Matrix<T> output(this->_rows, mat._cols);
+	// A*B multiplication
+	// for each A row
+	for (size_t row = 0; row < this->_rows; ++row)
+	{
+		// for each B column
+		for (size_t col = 0; col < mat._cols; ++col)
+		{
+			// multiply elements
+			T sum = (*this)[0][row] * mat[col][0];
+			for (size_t i = 1; i < this->_cols; ++i)
+				sum += (*this)[i][row] * mat[col][i];
+			output[col][row] = sum;
+		}
+	}
+	return output;
 }

@@ -109,7 +109,7 @@ void vectorBasicTests()
         []() -> void {
             Vector<float> A{1,2,3,4};
             std::cout << "A: " << ivp(A) << "\n";
-            std::cout << "A.toMatrix(0,4):\n" << A.toMatrix(2,3) << "\n";
+            std::cout << "A.toMatrix(0,4):\n" << A.toMatrix(0,4) << "\n";
         }
     );
 }
@@ -168,6 +168,7 @@ void matrixBasicTests()
         []() -> void {
             Matrix<float> A{{1,2,3}};
             std::cout << "A: " << A << "\n";
+            std::cout << "A[2]: " << A[2] << "\n";
             std::cout << "A[3]: " << A[3] << "\n";
         }
     );
@@ -175,20 +176,27 @@ void matrixBasicTests()
         []() -> void {
             Matrix<float> A{{1,2,3}};
             std::cout << "A: " << A << "\n";
+            std::cout << "A[2][0]: " << A[2][0] << "\n";
             std::cout << "A[2][1]: " << A[2][1] << "\n";
         }
     );
     Test::add("shape",
         []() -> void {
             Matrix<float> A{{1,2,3}};
-            std::cout << "A: " << A << " A.shape(): " << A.shape() << "\n";
+            std::cout << "A: Matrix<float> A{{1,2,3}}\n" << A << "\nA.shape(): "
+                << A.shape() << "\n";
             Matrix<float> B(0,5);
-            std::cout << "B: Matrix<float> B(0,5): " << B << " B.shape(): " << B.shape() << "\n";
+            std::cout << "B: Matrix<float> B(0,5)\n" << B << "\nB.shape(): "
+                << B.shape() << "\n";
             Matrix<float> C{{}};
-            std::cout << "C: Matrix<float> C{{}}: " << C << " C.shape(): " << C.shape() << "\n";
+            std::cout << "C: Matrix<float> C{{}}:\n" << C << "\nC.shape(): "
+                << C.shape() << "\n";
             Matrix<float> D{{1,2},{3,4},{5,6}};
-            std::cout << "D:\n" << D << "\nD.shape(): " << D.shape() << "\n";
-
+            std::cout << "D: Matrix<float> D{{1,2},{3,4},{5,6}}:\n" << D
+                << "\nD.shape(): " << D.shape() << "\n";
+            Matrix<float> E(3,2);
+            std::cout << "E: Matrix<float> E(3,2):\n" << E << "\nE.shape(): "
+                << E.shape() << "\n";
         }
     );
     Test::add("toVector ok",
@@ -207,7 +215,7 @@ void matrixBasicTests()
             std::cout << "A:\n" << A << "\n";
             Vector<float> B = A.toVector();
             std::cout << "B = A.toVector(): " << ivp(B) << "\n";
-            std::cout << "B.toMatrix(2,3):\n" << B.toMatrix(2,3) << "\n";
+            std::cout << "B.toMatrix(3,2):\n" << B.toMatrix(3,2) << "\n";
         }
     );
 }

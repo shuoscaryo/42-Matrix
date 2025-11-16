@@ -16,7 +16,7 @@ void normHelper(Vector<T> u)
 
 void subjectTests()
 {
-	Test::header("dot product subject tests");
+	Test::header("subject tests");
 	Test::add("",
 		normHelper<float>,
 		Vector<float>{0,0,0}

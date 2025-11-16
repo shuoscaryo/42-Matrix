@@ -39,7 +39,7 @@ class Vector
 	// Member functions
 
 		size_t size() const;
-		Matrix<T> toMatrix(size_t cols, size_t rows) const;
+		Matrix<T> toMatrix(size_t rows, size_t cols) const;
 
 		Vector<T> & add(const Vector<T> & rhs);
 		Vector<T> & sub(const Vector<T> & rhs);
@@ -217,11 +217,11 @@ size_t Vector<T>::size() const
 }
 
 template <typename T>
-Matrix<T> Vector<T>::toMatrix(size_t cols, size_t rows) const
+Matrix<T> Vector<T>::toMatrix(size_t rows, size_t cols) const
 {
 	if (_size != cols * rows)
 		throw std::runtime_error("Vector::toMatrix Invalid matrix shape");
-	Matrix<T> output(cols, rows);
+	Matrix<T> output(rows, cols);
 	size_t k = 0;
 	for (size_t j = 0; j < rows; ++j)
 		for (size_t i = 0; i < cols; ++i)

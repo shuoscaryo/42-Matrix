@@ -15,7 +15,7 @@ void cosHelper(Vector<T> u, Vector<T> v)
 
 void myTests()
 {
-	Test::header("dot product my tests");
+	Test::header("cosine product my tests");
 	Test::add("",
 		cosHelper<float>,
 		Vector<float>{1,1,1},
@@ -25,7 +25,7 @@ void myTests()
 
 void subjectTests()
 {
-	Test::header("dot product subject tests");
+	Test::header("subject tests");
 	Test::add("",
 		cosHelper<float>,
 		Vector<float>{1,0},
@@ -35,6 +35,11 @@ void subjectTests()
 		cosHelper<float>,
 		Vector<float>{1,0},
 		Vector<float>{0,1}
+	);
+	Test::add("",
+		cosHelper<float>,
+		Vector<float>{-1,1},
+		Vector<float>{1,-1}
 	);
 	Test::add("",
 		cosHelper<float>,

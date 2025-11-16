@@ -32,7 +32,7 @@ void linearCombTest(
 		if (coefsIt != coefs.end())
 			++coefsIt;
 	} while (uIt != u.end() or coefsIt != coefs.end());
-	Vector<T> v = Vector<T>::linear_combination(u, coefs);
+	Vector<T> v = linear_combination(u, coefs);
 	std::cout << "linear combination: " << ivp(v) << "\n";
 }
 
@@ -63,13 +63,13 @@ void matrixLinearCombTest(
 		if (coefsIt != coefs.end())
 			++coefsIt;
 	} while (uIt != u.end() or coefsIt != coefs.end());
-	Matrix<T> A = Matrix<T>::linear_combination(u, coefs);
+	Matrix<T> A = linear_combination(u, coefs);
 	std::cout << "linear combination:\n" << A << "\n";
 }
 
 void subjectTests()
 {
-	Test::header("Linear Combination Subject Tests");
+	Test::header("Subject Tests");
 	Test::add("",
 		linearCombTest<float>,
 		std::initializer_list<Vector<float>>{
@@ -91,7 +91,7 @@ void subjectTests()
 
 void myTests()
 {
-	Test::header("Linear Combination my Tests");
+	Test::header("my Tests");
 	Test::add("Empty",
 		linearCombTest<float>,
 		std::initializer_list<Vector<float>>{},

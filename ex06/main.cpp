@@ -19,7 +19,7 @@ void myTests()
 
 void subjectTests()
 {
-	Test::header("dot product subject tests");
+	Test::header("subject tests");
 	Test::add("",
 		crossHelper<float>,
 		Vector<float>{0,0,1},
