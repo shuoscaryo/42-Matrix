@@ -50,6 +50,8 @@ class Matrix
 		Vector<T> mul_vec(const Vector<T> & vec) const;
 		Matrix<T> mul_mat(const Matrix<T> & mat) const;
 
+		T trace() const;
+
 
 	protected:
 	private:
@@ -343,4 +345,17 @@ Matrix<T> Matrix<T>::mul_mat(const Matrix<T> & mat) const
 		}
 	}
 	return output;
+}
+
+// EX08
+
+template <typename T>
+T Matrix::trace() const
+{
+	if (_cols == 0)
+		return T{};
+	T output = _cols[0][0]
+	for (size_t i = 0; i < _cols; ++i)
+		output += _cols[i][i];
+	return T
 }
