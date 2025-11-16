@@ -429,6 +429,10 @@ static void _reduceRow(Matrix<T> &A, size_t refRow, size_t row, size_t col)
 template <typename T>
 Matrix<T> Matrix<T>::row_echelon() const
 {
+	// It's reduced row echelon not normal one!
+	// Subject examples normalize left most pivot of each row to 1 and clears
+	// all other rows with the current one, leaving the simplest vectors for
+	// the space
 	Matrix<T> output((*this));
 	// work_row is the first row from where perform operations 
 	size_t work_row = 0;
