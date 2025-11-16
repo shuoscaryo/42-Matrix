@@ -352,6 +352,8 @@ Matrix<T> Matrix<T>::mul_mat(const Matrix<T> & mat) const
 template <typename T>
 T Matrix<T>::trace() const
 {
+	if (!isSquare())
+		throw std::runtime_error("Matrix::trace trace only available for square matrices");
 	if (_cols == 0)
 		return T{};
 	T output = (*this)[0][0];
