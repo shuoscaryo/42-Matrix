@@ -399,6 +399,10 @@ Vector<T> cross_product(const Vector<T> & u, const Vector<T> & v)
 	//
 	// Norm of n gives the area of the parallelogram spanned by u and v:
 	// ||n|| = ||u|| * ||v|| * sin(theta)
+	if (u.size() != 3)
+		throw std::invalid_argument("cross_product vectors must be size 3");
+	if (u.size() != v.size())
+		throw std::invalid_argument("cross_product vectors must have same size");
 	Vector<T> n(3);
 	n[0] = u[1]*v[2] - u[2]*v[1];
 	n[1] = u[2]*v[0] - u[0]*v[2];
