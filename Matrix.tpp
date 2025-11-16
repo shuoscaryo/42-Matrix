@@ -52,6 +52,8 @@ class Matrix
 
 		T trace() const;
 
+		Matrix<T> transpose() const;
+
 
 	protected:
 	private:
@@ -359,5 +361,19 @@ T Matrix<T>::trace() const
 	T output = (*this)[0][0];
 	for (size_t i = 1; i < _cols; ++i)
 		output += (*this)[i][i];
+	return output;
+}
+
+// EX09
+
+template <typename T>
+Matrix<T> Matrix<T>::transpose() const
+{
+	Matrix<T> output(_cols, _rows);
+	for (size_t row = 0; row < _rows; ++row)
+	{
+		for (size_t col = 0; col < _cols; ++col)
+			output[row][col] = (*this)[col][row];
+	}
 	return output;
 }
