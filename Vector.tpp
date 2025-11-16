@@ -380,3 +380,28 @@ float angle_cos(const Vector<T> & u, const Vector<T> & v)
 	// cos = dot(U,V) / (mod(U) * mod(V))
 	return u.dot(v) / (u.norm() * v.norm());
 }
+
+// EX06
+
+template <typename T>
+Vector<T> cross_product(const Vector<T> & u, const Vector<T> & v)
+{
+	// Only for 3D
+	// Cross product is a vector n perpendicular to both u and v
+	// dot(u, n) = dot(v, n) = 0 -> 2 equations, 3 variables
+	// n1 is set to avoid fractions ->
+	// n = (u2*v3 - u3*v2, u3*v1 - u1*v3, u1*v2 - u2*v1)
+	// Determinant notation is used to write it more compactly:
+	//
+	// |  i   j   k  |
+	// | u1  u2  u3 | =  i*(u2*v3 - u3*v2) + j*(u3*v1 - u1*v3) + k*(u1*v2 - u2*v1)
+	// | v1  v2  v3 |
+	//
+	// Norm of n gives the area of the parallelogram spanned by u and v:
+	// ||n|| = ||u|| * ||v|| * sin(theta)
+	Vector<T> n(3);
+	n[0] = u[1]*v[2] - u[2]*v[1];
+	n[1] = u[2]*v[0] - u[0]*v[2];
+	n[2] = u[0]*v[1] - u[1]*v[0];
+	return n;
+}
