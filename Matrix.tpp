@@ -436,9 +436,11 @@ Matrix<T> Matrix<T>::row_echelon() const
 	Matrix<T> output((*this));
 	// work_row is the first row from where perform operations 
 	size_t work_row = 0;
+	const size_t colLen = this->shape().second;
+	const size_t rowLen = this->shape().first;
 	// Iterate columns to remove every element but the pivot
 	// up to _cols - 1 because the last row won't simplify other rows
-	for (size_t col = 0; col < this->_cols; ++col)
+	for (size_t col = 0; col < colLen; ++col)
 	{
 		// Find first row that has a value different than 0 to use as pivot
 		const int pivotRow = _findNonZeroRow(output, work_row, col);
@@ -450,7 +452,7 @@ Matrix<T> Matrix<T>::row_echelon() const
 		// Scale the row so it starts with 1
 		_scaleRow(output, work_row, col);
 		// simplify rest of rows in same column
-		for (size_t row = 0; row < this->_rows; ++row)
+		for (size_t row = 0; row < rowLen; ++row)
 			if (row != work_row)
 				_reduceRow(output, work_row, row, col);
 		// update the work row so the current pivot is not used no more
