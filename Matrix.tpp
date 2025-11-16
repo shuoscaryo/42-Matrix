@@ -40,6 +40,7 @@ class Matrix
 	// Member functions
 
 		std::pair<size_t, size_t> shape() const;
+		bool isSquare() const;
 		Vector<T> toVector() const;
 
 		Matrix<T> & add(const Matrix<T> & rhs);
@@ -225,6 +226,12 @@ template <typename T>
 std::pair<size_t, size_t> Matrix<T>::shape() const
 {
     return {_rows, _cols};
+}
+
+template <typename T>
+bool Matrix<T>::isSquare() const
+{
+    return _rows == _cols;
 }
 
 template <typename T>
