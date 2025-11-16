@@ -22,6 +22,7 @@ void myTests()
 		Vector<float>{1,1,-2}
 	);
 }
+
 void subjectTests()
 {
 	Test::header("dot product subject tests");
