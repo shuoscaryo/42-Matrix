@@ -485,8 +485,8 @@ T Matrix<T>::determinant() const
 	Matrix<T> output((*this));
 	// work_row is the first row from where perform operations
 	size_t work_row = 0;
-	// sign false = +1, sign true = -1
-	bool sign = false;
+	// flag false = -1, flag true = +1
+	bool flag = true;
 	// Iterate columns to remove every element but the pivot
 	for (size_t col = 0; col < _cols - 1; ++col)
 	{
@@ -497,7 +497,7 @@ T Matrix<T>::determinant() const
 		// If the row used as pivot is not the first, make it first
 		if (pivotRow != int(work_row))
 		{
-			sign = !sign;
+			flag = !flag;
 			_swapRows(output, pivotRow, work_row);
 		}
 		for (size_t row = work_row + 1; row < _rows; ++row)
@@ -508,5 +508,5 @@ T Matrix<T>::determinant() const
 	T sum = output[0][0];
 	for (size_t i = 1; i < _rows; ++i)
 		sum *= output[i][i];
-	return sign == false ? sum: -sum;
+	return flag == true ? sum: -sum;
 }
