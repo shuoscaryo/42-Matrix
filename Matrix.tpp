@@ -42,6 +42,7 @@ class Matrix
 		std::pair<size_t, size_t> shape() const;
 		bool isSquare() const;
 		Vector<T> toVector() const;
+		static Matrix<T> identity(size_t size);
 
 		Matrix<T> & add(const Matrix<T> & rhs);
 		Matrix<T> & sub(const Matrix<T> & rhs);
@@ -57,6 +58,8 @@ class Matrix
 		Matrix<T> row_echelon() const;
 
 		T determinant() const;
+
+		Matrix<T> inverse() const;
 
 
 	protected:
@@ -253,6 +256,16 @@ Vector<T> Matrix<T>::toVector() const
 	return output;
 }
 
+template <typename T>
+Matrix<T> Matrix<T>::identity(size_t size)
+{
+	// Creates an identity matrix with specified size
+	Matrix<T> output(size,size);
+	for (size_t i = 0; i < size; ++i)
+		output[i][i] = 1;
+	return output;
+}
+
 // EX00
 
 template <typename T>
@@ -404,27 +417,32 @@ static void _swapRows(Matrix<T> &A, size_t row1, size_t row2)
 }
 
 template <typename T>
-static void _scaleRow(Matrix<T> &A, size_t row, size_t col)
+static void _scaleRow(
+	Matrix<T> &A,
+	size_t row,
+	const T & multiplier,
+	size_t startFrom = 0
+)
 {
-	const T multiplier = A[col][row];
 	const size_t colLen = A.shape().second;
 	// Divide the whole row by the first element, so the first one becomes 1
-	for (size_t i = col; i < colLen; ++i)
-		A[i][row] /= multiplier;
+	for (size_t i = startFrom; i < colLen; ++i)
+		A[i][row] *= multiplier;
 }
 
 template <typename T>
-static void _reduceRow(Matrix<T> &A, size_t refRow, size_t row, size_t col)
+static void _substractRow(
+	Matrix<T> &A,
+	size_t refRow,
+	size_t row,
+	const T & multiplier, 
+	size_t startFrom = 0
+)
 {
-	// if the target row starts already with 0 no need to reduce
-	if (A[col][row] == 0)
-		return;
-	// What factor to multiply the refRow so substracting it to row removes
-	// the col component
-	const T multiplier = A[col][row] / A[col][refRow];
+	// row - refRow * multiplier
 	const size_t colLen = A.shape().second;
 	// substract the refRow multiplied to the target row
-	for (size_t i = col; i < colLen; ++i)
+	for (size_t i = startFrom; i < colLen; ++i)
 		A[i][row] -= A[i][refRow] * multiplier;
 }
 
@@ -436,26 +454,27 @@ Matrix<T> Matrix<T>::row_echelon() const
 	// all other rows with the current one, leaving the simplest vectors for
 	// the space
 	Matrix<T> output((*this));
-	// work_row is the first row from where perform operations 
-	size_t work_row = 0;
+	// workRow is the first row from where perform operations 
+	size_t workRow = 0;
 	// Iterate columns to remove every element but the pivot
 	for (size_t col = 0; col < _cols; ++col)
 	{
 		// Find first row that has a value different than 0 to use as pivot
-		const int pivotRow = _findNonZeroRow(output, work_row, col);
+		const int pivotRow = _findNonZeroRow(output, workRow, col);
 		if (pivotRow == -1)
 			continue;
 		// If the row used as pivot is not the first, make it first
-		if (pivotRow != int(work_row))
-			_swapRows(output, pivotRow, work_row);
-		// Scale the row so it starts with 1
-		_scaleRow(output, work_row, col);
+		if (pivotRow != int(workRow))
+			_swapRows(output, pivotRow, workRow);
+		// Scale the row so it starts with 1 and start from the curr col
+		_scaleRow(output, workRow, 1 / output[col][workRow], col);
 		// simplify rest of rows in same column
 		for (size_t row = 0; row < _rows; ++row)
-			if (row != work_row)
-				_reduceRow(output, work_row, row, col);
+			if (row != workRow)
+				_substractRow(output, workRow, row,
+					output[col][row] / output[col][workRow], col);
 		// update the work row so the current pivot is not used more
-		++work_row;
+		++workRow;
 	}
 	return output;
 }
@@ -478,29 +497,30 @@ T Matrix<T>::determinant() const
 	if (!isSquare())
 		throw std::runtime_error("Matrix::determinant non square matrix");
 	if (_rows == 0)
-		throw std::runtime_error("Matrix::determinant Matrix is shape (0,0)");
+		throw std::runtime_error("Matrix::determinant shape (0,0)");
 	Matrix<T> output((*this));
-	// work_row is the first row from where perform operations
-	size_t work_row = 0;
+	// workRow is the first row from where perform operations
+	size_t workRow = 0;
 	// flag false = -1, flag true = +1
 	bool flag = true;
 	// Iterate columns to remove every element but the pivot
 	for (size_t col = 0; col < _cols - 1; ++col)
 	{
 		// Find first row that has a value different than 0 to use as pivot
-		const int pivotRow = _findNonZeroRow(output, work_row, col);
+		const int pivotRow = _findNonZeroRow(output, workRow, col);
 		if (pivotRow == -1)
 			continue;
 		// If the row used as pivot is not the first, make it first
-		if (pivotRow != int(work_row))
+		if (pivotRow != int(workRow))
 		{
 			flag = !flag;
-			_swapRows(output, pivotRow, work_row);
+			_swapRows(output, pivotRow, workRow);
 		}
-		for (size_t row = work_row + 1; row < _rows; ++row)
-			_reduceRow(output, work_row, row, col);
+		for (size_t row = workRow + 1; row < _rows; ++row)
+			_substractRow(output, workRow, row,
+				output[col][row] / output[col][workRow], col);
 		// update the work row so the current pivot is not used more
-		++work_row;
+		++workRow;
 	}
 	// Calculate the multiplication of the diagonal. Only non zero term in
 	// determinant
@@ -508,4 +528,56 @@ T Matrix<T>::determinant() const
 	for (size_t i = 1; i < _rows; ++i)
 		sum *= output[i][i];
 	return flag == true ? sum: -sum;
+}
+
+// EX12
+
+template <typename T>
+Matrix<T> Matrix<T>::inverse() const
+{
+	// To calculate inverse we start from defining what should the inverse do
+	// A * A^-1 = I
+	// If we apply consecutive multiplications to both sides we can change A
+	// so it becomes I
+	// (E1 * E2 * ...) * A * A^-1 = (E1 * E2 * ...) * I
+	// (E1 * E2 * ...) * A = I
+	// The Ei operations are swap, scale and add one row to another.
+	// Every operation is done for "output" and "A" equally.
+	if (!isSquare())
+		throw std::runtime_error("Matrix::inverse non square matrix");
+	if (_rows == 0)
+		throw std::runtime_error("Matrix::inverse shape (0,0)");
+	Matrix<T> output = Matrix<T>::identity(_cols);
+	Matrix<T> A(*this);
+	// workRow is the first row from where perform operations
+	size_t workRow = 0;
+	// Iterate columns to remove every element but the pivot
+	for (size_t col = 0; col < _cols; ++col)
+	{
+		// Find first row that has a value different than 0 to use as pivot
+		const int pivotRow = _findNonZeroRow(A, workRow, col);
+		if (pivotRow == -1)
+			throw std::runtime_error("Matrix::inverse singular matrix");
+		// If the row used as pivot is not the first, make it first
+		if (pivotRow != int(workRow))
+		{
+			_swapRows(output, pivotRow, workRow);
+			_swapRows(A, pivotRow, workRow);
+		}
+		// Scale A so it starts with one, apply same factor to output
+		T sclFactor = 1 / A[col][workRow];
+		_scaleRow(A, workRow, sclFactor, col);
+		_scaleRow(output, workRow, sclFactor);
+		// simplify rest of rows in same column
+		for (size_t row = 0; row < _rows; ++row)
+			if (row != workRow)
+			{
+				T subFactor = A[col][row] / A[col][workRow];
+				_substractRow(A, workRow, row, subFactor, col);
+				_substractRow(output, workRow, row, subFactor);
+			}
+		// update the work row so the current pivot is not used more
+		++workRow;
+	}
+	return output;
 }
