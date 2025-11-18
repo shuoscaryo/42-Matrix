@@ -56,6 +56,8 @@ class Matrix
 
 		Matrix<T> row_echelon() const;
 
+		T determinant() const;
+
 
 	protected:
 	private:
@@ -436,11 +438,8 @@ Matrix<T> Matrix<T>::row_echelon() const
 	Matrix<T> output((*this));
 	// work_row is the first row from where perform operations 
 	size_t work_row = 0;
-	const size_t colLen = this->shape().second;
-	const size_t rowLen = this->shape().first;
 	// Iterate columns to remove every element but the pivot
-	// up to _cols - 1 because the last row won't simplify other rows
-	for (size_t col = 0; col < colLen; ++col)
+	for (size_t col = 0; col < _cols; ++col)
 	{
 		// Find first row that has a value different than 0 to use as pivot
 		const int pivotRow = _findNonZeroRow(output, work_row, col);
@@ -452,11 +451,62 @@ Matrix<T> Matrix<T>::row_echelon() const
 		// Scale the row so it starts with 1
 		_scaleRow(output, work_row, col);
 		// simplify rest of rows in same column
-		for (size_t row = 0; row < rowLen; ++row)
+		for (size_t row = 0; row < _rows; ++row)
 			if (row != work_row)
 				_reduceRow(output, work_row, row, col);
-		// update the work row so the current pivot is not used no more
+		// update the work row so the current pivot is not used more
 		++work_row;
 	}
 	return output;
+}
+
+// EX11
+
+template <typename T>
+T Matrix<T>::determinant() const
+{
+	// Diagonalize Matrix and determinant is only the diagonal part :O
+	// (not used) Operation of scaling a row scales determinant the same amount
+	// eg.     |1 2|             |1*2 2*2| 
+	//     det |3 4| = -2 -> det | 3   4 | = -2 * 2
+	// Operation of swaping rows changes the sign of determinant
+	// eg.     |1 2|             |3 4| 
+	//     det |3 4| = -2 -> det |1 2| = 2
+	// Operation of substracting a row to another doesn't change derminant
+	// eg.     |1 2|             | 1   2 | 
+	//     det |3 4| = -2 -> det |3-1 4-2| = -2
+	if (!isSquare())
+		throw std::runtime_error(
+			"Matrix::determinant can't compute "
+			"non square matrix determinant"
+		);
+	if (_rows == 0)
+		throw std::runtime_error("Matrix::determinant Matrix is shape (0,0)");
+	Matrix<T> output((*this));
+	// work_row is the first row from where perform operations
+	size_t work_row = 0;
+	// sign false = +1, sign true = -1
+	bool sign = false;
+	// Iterate columns to remove every element but the pivot
+	for (size_t col = 0; col < _cols - 1; ++col)
+	{
+		// Find first row that has a value different than 0 to use as pivot
+		const int pivotRow = _findNonZeroRow(output, work_row, col);
+		if (pivotRow == -1)
+			continue;
+		// If the row used as pivot is not the first, make it first
+		if (pivotRow != int(work_row))
+		{
+			sign = !sign;
+			_swapRows(output, pivotRow, work_row);
+		}
+		for (size_t row = work_row + 1; row < _rows; ++row)
+			_reduceRow(output, work_row, row, col);
+		// update the work row so the current pivot is not used more
+		++work_row;
+	}
+	T sum = output[0][0];
+	for (size_t i = 1; i < _rows; ++i)
+		sum *= output[i][i];
+	return sign == false ? sum: -sum;
 }
