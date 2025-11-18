@@ -476,10 +476,7 @@ T Matrix<T>::determinant() const
 	// eg.     |1 2|             | 1   2 | 
 	//     det |3 4| = -2 -> det |3-1 4-2| = -2
 	if (!isSquare())
-		throw std::runtime_error(
-			"Matrix::determinant can't compute "
-			"non square matrix determinant"
-		);
+		throw std::runtime_error("Matrix::determinant non square matrix");
 	if (_rows == 0)
 		throw std::runtime_error("Matrix::determinant Matrix is shape (0,0)");
 	Matrix<T> output((*this));
@@ -505,6 +502,8 @@ T Matrix<T>::determinant() const
 		// update the work row so the current pivot is not used more
 		++work_row;
 	}
+	// Calculate the multiplication of the diagonal. Only non zero term in
+	// determinant
 	T sum = output[0][0];
 	for (size_t i = 1; i < _rows; ++i)
 		sum *= output[i][i];
