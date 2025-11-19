@@ -61,6 +61,8 @@ class Matrix
 
 		Matrix<T> inverse() const;
 
+		size_t rank() const;
+
 
 	protected:
 	private:
@@ -581,3 +583,42 @@ Matrix<T> Matrix<T>::inverse() const
 	}
 	return output;
 }
+
+// EX13
+
+template <typename T>
+size_t Matrix<T>::rank() const
+{
+	// Rank is how many pivot points we have
+	Matrix<T> A(*this);
+	// workRow is the first row from where perform operations
+	size_t workRow = 0;
+	size_t rank = 0;
+	// Iterate columns to remove every element but the pivot
+	for (size_t col = 0; col < _cols; ++col)
+	{
+		// Find first row that has a value different than 0 to use as pivot
+		const int pivotRow = _findNonZeroRow(A, workRow, col);
+		if (pivotRow == -1)
+			continue;
+		++rank;
+		// If the row used as pivot is not the first, make it first
+		if (pivotRow != int(workRow))
+			_swapRows(A, pivotRow, workRow);
+		// Scale A so it starts with one, apply same factor to output
+		T sclFactor = 1 / A[col][workRow];
+		_scaleRow(A, workRow, sclFactor, col);
+		// simplify rest of rows in same column
+		for (size_t row = 0; row < _rows; ++row)
+			if (row != workRow)
+			{
+				T subFactor = A[col][row] / A[col][workRow];
+				_substractRow(A, workRow, row, subFactor, col);
+			}
+		// update the work row so the current pivot is not used more
+		++workRow;
+	}
+	return rank;
+}
+
+// EX14
