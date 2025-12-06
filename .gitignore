@@ -17,6 +17,7 @@
 !Makefile
 !subject.pdf
 !.gitignore
+!matrix_display
 
 #ignore all object files
 **/*.o
