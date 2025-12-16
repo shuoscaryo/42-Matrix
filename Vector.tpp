@@ -71,13 +71,14 @@ template<class T>
 struct inlineVectorPrint
 {
 	const Vector<T>& v;
+	const std::string spacer;
 };
 
 // Helper so it's shorter
 template<class T>
-inlineVectorPrint<T> ivp(const Vector<T>& v)
+inlineVectorPrint<T> ivp(const Vector<T>& v, std::string spacer = " ")
 {
-	return inlineVectorPrint<T>{v};
+	return inlineVectorPrint<T>{v, spacer};
 }
 
 // CONSTRUCTORS
@@ -202,7 +203,7 @@ std::ostream &operator<<(
 
 	os << "[";
 	for (size_t i = 0; i < v.size() - 1; ++i)
-		os << v[i] << " ";
+		os << v[i] << obj.spacer;
 	os << v[v.size() - 1] << "]";
 		
 	return os;
@@ -237,7 +238,7 @@ Vector<T> & Vector<T>::add(const Vector<T> & rhs)
 	if (_size != rhs._size)
 		throw std::invalid_argument("Vector::add size mismatch");
 	for (size_t i = 0; i < _size; ++i)
-		_elements[i] += rhs[i];
+		_elements[i] = _elements[i] + rhs[i];
 
 	return *this;
 }
@@ -248,7 +249,7 @@ Vector<T> & Vector<T>::sub(const Vector<T> & rhs)
 	if (_size != rhs._size)
 		throw std::invalid_argument("Vector::sub size mismatch");
 	for (size_t i = 0; i < _size; ++i)
-		_elements[i] -= rhs[i];
+		_elements[i] = _elements[i] - rhs[i];
 
 	return *this;
 }
@@ -257,7 +258,7 @@ template <typename T>
 Vector<T> & Vector<T>::scl(const T & rhs)
 {
 	for (size_t i = 0; i < _size; ++i)
-		_elements[i] *= rhs;
+		_elements[i] = _elements[i] * rhs;
 
 	return *this;
 }
@@ -310,7 +311,7 @@ T Vector<T>::dot(const Vector<T> & rhs) const
 		return T{};
 	T output = _elements[0] * rhs[0];
 	for (size_t i = 1; i < this->size(); ++i)
-		output += _elements[i] * rhs[i];
+		output = output + _elements[i] * rhs[i];
 	return output;
 }
 
@@ -328,7 +329,7 @@ float Vector<T>::norm_1() const
 	for (size_t i = 0; i < size(); ++i)
 	{
 		float val = (_elements[i] > 0 ? _elements[i] : - _elements[i]);
-		output += val;
+		output = output + val;
 	}
 	return output;
 }
@@ -346,7 +347,7 @@ float Vector<T>::norm() const
 	for (size_t i = 0; i < size(); ++i)
 	{
 		float val = (_elements[i] > 0 ? _elements[i] : - _elements[i]);
-		output += val * val;
+		output = output + val * val;
 	}
 	// Math lib used here (subject)
 	output = pow(output, 0.5);

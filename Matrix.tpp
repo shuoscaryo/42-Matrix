@@ -340,7 +340,7 @@ Vector<T> Matrix<T>::mul_vec(const Vector<T> & vec) const
 	{
 		T sum = (*this)[0][row] * vec[0];
 		for (size_t col = 1; col < this->_cols; ++col)
-			sum += (*this)[col][row] * vec[col];
+			sum = sum + (*this)[col][row] * vec[col];
 		output[row] = sum;
 	}
 	return output;
@@ -362,7 +362,7 @@ Matrix<T> Matrix<T>::mul_mat(const Matrix<T> & mat) const
 			// multiply elements
 			T sum = (*this)[0][row] * mat[col][0];
 			for (size_t i = 1; i < this->_cols; ++i)
-				sum += (*this)[i][row] * mat[col][i];
+				sum = sum + (*this)[i][row] * mat[col][i];
 			output[col][row] = sum;
 		}
 	}
@@ -380,7 +380,7 @@ T Matrix<T>::trace() const
 		return T{};
 	T output = (*this)[0][0];
 	for (size_t i = 1; i < _cols; ++i)
-		output += (*this)[i][i];
+		output = output + (*this)[i][i];
 	return output;
 }
 
@@ -430,7 +430,7 @@ static void _scaleRow(
 	const size_t colLen = A.shape().second;
 	// Divide the whole row by the first element, so the first one becomes 1
 	for (size_t i = startFrom; i < colLen; ++i)
-		A[i][row] *= multiplier;
+		A[i][row] = A[i][row] * multiplier;
 }
 
 template <typename T>
@@ -446,7 +446,7 @@ static void _substractRow(
 	const size_t colLen = A.shape().second;
 	// substract the refRow multiplied to the target row
 	for (size_t i = startFrom; i < colLen; ++i)
-		A[i][row] -= A[i][refRow] * multiplier;
+		A[i][row] = A[i][row] - A[i][refRow] * multiplier;
 }
 
 template <typename T>
@@ -529,7 +529,7 @@ T Matrix<T>::determinant() const
 	// determinant
 	T sum = output[0][0];
 	for (size_t i = 1; i < _rows; ++i)
-		sum *= output[i][i];
+		sum = sum * output[i][i];
 	return flag == true ? sum: -sum;
 }
 
@@ -630,13 +630,13 @@ Matrix<float> projection(float fov, float ratio, float near, float far)
 	float tanBeta = tan(fov/2);
 	float tanAlfa = ratio * tanBeta;
 	// Z projection ratios
-    float K = far / (near - far);  // <-- sin el signo menos delante
+    float K = far / (near - far);
     float L = near * far / (near - far);
 	Matrix<float> output = {
-		{1/tanAlfa,0,0,0},
-		{0,1/tanBeta,0,0},
-		{0,0,K,L},
-		{0,0,-1,0}
+		{1/tanAlfa, 0, 0, 0},
+		{0, 1/tanBeta, 0, 0},
+		{0, 0, K, L},
+		{0, 0, -1, 0}
 	};
 	return output;
 }
