@@ -24,15 +24,18 @@ Complex &Complex::operator=(const Complex &rhs)
 	return (*this);
 }
 
-Complex Complex::operator+(const Complex& rhs) const {
+Complex Complex::operator+(const Complex& rhs) const
+{
 	return Complex(_r + rhs._r, _i + rhs._i);
 }
 
-Complex Complex::operator-(const Complex& rhs) const {
+Complex Complex::operator-(const Complex& rhs) const
+{
 	return Complex(_r - rhs._r, _i - rhs._i);
 }
 
-Complex Complex::operator*(const Complex& rhs) const {
+Complex Complex::operator*(const Complex& rhs) const
+{
 	return Complex(_r * rhs._r - _i * rhs._i, _r * rhs._i + _i * rhs._r);
 }
 
