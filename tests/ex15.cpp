@@ -154,10 +154,29 @@ void TestsEx02()
 	);
 }
 
+template <typename T>
+void dotHelper(Vector<T> u, const Vector<T> &v)
+{
+	std::cout << "u: " << ivp(u) << "\n";
+	std::cout << "v: " << ivp(v) << "\n";
+	std::cout << "u.dot(v): " << u.dot(v) << "\n";
+}
+
+void TestsEx03()
+{
+    Test::header("Tests Ex03");
+	Test::add("",
+		dotHelper<Complex>,
+		Vector<float>{0,0},
+		Vector<float>{1,1}
+	);
+}
+
 int main()
 {
 	TestsEx00();
 	TestsEx01();
 	TestsEx02();
+	TestsEx03();
 	return 0;
 }

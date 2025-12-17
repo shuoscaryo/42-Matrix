@@ -51,6 +51,8 @@ class Vector
 		float norm() const;
 		float norm_inf() const;
 
+		T vdot(const Vector<T> & rhs) const;
+
 	protected:
 	private:
 	// Atributes
@@ -302,9 +304,7 @@ V lerp(V u, V v, float t)
 template <typename T>
 T Vector<T>::dot(const Vector<T> & rhs) const
 {
-	// Defined as:
 	// dot = Σ v[i] * u[i]
-	// Used for when 
 	if (this->size() != rhs.size())
         throw std::invalid_argument("Vector::dot vectors must have same size");
 	if (this->size() == 0)
@@ -409,4 +409,20 @@ Vector<T> cross_product(const Vector<T> & u, const Vector<T> & v)
 	n[1] = u[2]*v[0] - u[0]*v[2];
 	n[2] = u[0]*v[1] - u[1]*v[0];
 	return n;
+}
+
+// EX15
+
+template <typename T>
+T Vector<T>::vdot(const Vector<T> & rhs) const
+{
+	// dot = Σ conj(v[i]) * u[i]
+	if (this->size() != rhs.size())
+        throw std::invalid_argument("Vector::dot vectors must have same size");
+	if (this->size() == 0)
+		return T{};
+	T output = _elements[0] * rhs[0];
+	for (size_t i = 1; i < this->size(); ++i)
+		output = output + _elements[i] * rhs[i];
+	return output;
 }
