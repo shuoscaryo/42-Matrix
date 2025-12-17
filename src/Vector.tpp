@@ -291,14 +291,6 @@ Vector<T> linear_combination(
 	return output;	
 }
 
-// EX02
-
-template <typename V>
-V lerp(V u, V v, float t)
-{
-	return u + (v - u) * t;
-}
-
 // EX03
 
 template <typename T>
@@ -370,16 +362,6 @@ float Vector<T>::norm_inf() const
 		output = (val > output ? val : output);
 	}
 	return output;
-}
-
-// EX05
-
-template <typename T>
-float angle_cos(const Vector<T> & u, const Vector<T> & v)
-{
-	// dot(U,V) = mod(U) * mod(V) * cos(O)
-	// cos = dot(U,V) / (mod(U) * mod(V))
-	return u.dot(v) / (u.norm() * v.norm());
 }
 
 // EX06

@@ -302,32 +302,6 @@ Matrix<T> & Matrix<T>::scl(const T & rhs)
 	return *this;
 }
 
-// EX01
-
-template <typename T>
-Matrix<T> linear_combination(
-	std::initializer_list<Matrix<T>> u,
-	std::initializer_list<T> coefs
-)
-{
-	if (u.size() == 0)
-		return Matrix<T>();
-	if (u.size() != coefs.size())
-		throw std::runtime_error("linear_combination different \"u\" and \"coefs\" sizes.");
-	Matrix<T> output(u.begin()->shape());
-	auto uIt = u.begin();
-	auto coefsIt = coefs.begin();
-	do
-	{
-		Matrix<T> vScaled(*uIt);
-		vScaled.scl(*coefsIt);
-		output.add(vScaled);
-		++uIt;
-		++coefsIt;
-	} while(uIt != u.end());
-	return output;	
-}
-
 // EX07
 
 template <typename T>
@@ -622,21 +596,3 @@ size_t Matrix<T>::rank() const
 	return rank;
 }
 
-// EX14
-
-Matrix<float> projection(float fov, float ratio, float near, float far)
-{
-	// alfa is YZ angle, beta is XZ angle
-	float tanBeta = tan(fov/2);
-	float tanAlfa = ratio * tanBeta;
-	// Z projection ratios
-    float K = far / (near - far);
-    float L = near * far / (near - far);
-	Matrix<float> output = {
-		{1/tanAlfa, 0, 0, 0},
-		{0, 1/tanBeta, 0, 0},
-		{0, 0, K, L},
-		{0, 0, -1, 0}
-	};
-	return output;
-}

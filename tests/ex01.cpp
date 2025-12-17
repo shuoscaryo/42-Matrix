@@ -136,53 +136,6 @@ void myTests()
 	);
 }
 
-void matrixExtraTests()
-{
-	Test::header("Linear Combination matrix extra Tests");
-	Test::add("Empty",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{},
-		std::initializer_list<float>{}
-	);
-	Test::add("1 Matrix, coef 1",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{
-			Matrix<float>{{1, 2}, {3, 4}}
-		},
-		std::initializer_list<float>{1}
-	);
-	Test::add("1 Matrix, coef 0.5",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{
-			Matrix<float>{{1, 2}, {3, 4}}
-		},
-		std::initializer_list<float>{0.5}
-	);
-	Test::add("Missing Matrix",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{
-			Matrix<float>{{1, 2}, {3, 4}}
-		},
-		std::initializer_list<float>{0.5, 2}
-	);
-	Test::add("Missing coefs",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{
-			Matrix<float>{{1, 2}, {3, 4}},
-			Matrix<float>{{1, 2}, {3, 4}}
-		},
-		std::initializer_list<float>{0.5}
-	);
-	Test::add("50\% 50\%",
-		matrixLinearCombTest<float>,
-		std::initializer_list<Matrix<float>>{
-			Matrix<float>{{2, 4}, {6, 8}},
-			Matrix<float>{{4, 8}, {12, 16}}
-		},
-		std::initializer_list<float>{0.5, 0.5}
-	);
-}
-
 int main()
 {
 	subjectTests();
