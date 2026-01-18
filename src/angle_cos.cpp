@@ -1,3 +1,5 @@
+#include "Vector.tpp"
+
 template <typename T>
 float angle_cos(const Vector<T> & u, const Vector<T> & v)
 {

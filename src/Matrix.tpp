@@ -228,7 +228,7 @@ std::ostream &operator<<(std::ostream &os, const Matrix<T> &obj)
 	return os;
 }
 
-std::ostream &operator<<(std::ostream &os, const std::pair<size_t, size_t> &obj)
+inline std::ostream &operator<<(std::ostream &os, const std::pair<size_t, size_t> &obj)
 {
 	os << "(" << obj.first << ", " << obj.second << ")";
 	return os;

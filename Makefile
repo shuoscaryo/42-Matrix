@@ -1,34 +1,36 @@
-NAME := #NAME
-
 CC := c++
 CFLAGS := -Wall -Wextra -Werror -std=c++14
 
-SRC := main.cpp
+SRC_FOLDER := src
+TESTS_FOLDER := tests
 
-OBJ := $(SRC:.cpp=.o)
+SRC_FILES := angle_cos.cpp Complex.cpp lerp.cpp projection.cpp
+TPP_FILES := Matrix.tpp Vector.tpp Test.tpp
+SRC_CPP := $(addprefix $(SRC_FOLDER)/,$(SRC_FILES))
+SRC_TPP := $(addprefix $(SRC_FOLDER)/,$(TPP_FILES))
+OBJ := $(SRC_CPP:.cpp=.o)
 
-# If no name provided, set default a.out
-ifeq ($(NAME),)
-	NAME := a.out
-endif
+TEST_CPP := $(wildcard $(TESTS_FOLDER)/*.cpp)
+EXEC := $(TEST_CPP:.cpp=)
 
-all: $(NAME)
+all:
+	echo $(TEST_CPP)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $@
+%: $(TESTS_FOLDER)/%.o $(OBJ) $(SRC_TPP)
+	$(CC) $(CFLAGS) $(OBJ) $< -o $@
 
-%.o: %.cpp
-	$(CC) $(CFLAGS) -c -o $@ $<
+$(SRC_FOLDER)/%.o: $(SRC_FOLDER)/%.cpp
+	$(CC) $(CFLAGS) -I src -c -o $@ $<
+
+$(TESTS_FOLDER)/%.o: $(TESTS_FOLDER)/%.cpp
+	$(CC) $(CFLAGS) -I src -c -o $@ $<
 
 clean:
-	@rm -rf $(OBJ)
+	rm -f $(OBJ) $(TEST_CPP:.cpp=.o)
 
 fclean: clean
-	@rm -f $(NAME)
+	rm -f $(EXEC)
 
 re: fclean all
 
-ex%:
-	$(DOCKER_COMPOSE) exec $* sh
-
-.PHONY: clean fclean all re
+.PHONY: all clean fclean re

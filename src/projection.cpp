@@ -1,3 +1,5 @@
+#include "Matrix.tpp"
+
 Matrix<float> projection(float fov, float ratio, float near, float far)
 {
 	// alfa is YZ angle, beta is XZ angle
