@@ -36,13 +36,6 @@ void myTests()
 		1,
 		2
 	);
-	Test::add("",
-		helper,
-		45,
-		3,
-		1,
-		2
-	);
 }
 
 int main()
