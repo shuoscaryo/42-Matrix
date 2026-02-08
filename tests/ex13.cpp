@@ -12,11 +12,6 @@ void helper(const Matrix<T> & A)
 	std::cout << "A.rank(): " << A.rank() << "\n";
 }
 
-void myTests()
-{
-	Test::header("my tests");
-}
-
 void subjectTests()
 {
 	Test::header("subject tests");
@@ -46,6 +41,5 @@ void subjectTests()
 int main()
 {
 	subjectTests();
-	myTests();
 	return 0;
 }
