@@ -601,16 +601,19 @@ size_t Matrix<T>::rank() const
 Matrix<float> projection(float fov, float ratio, float near, float far)
 {
 	// alfa is YZ angle, beta is XZ angle
-	float tanBeta = tan(fov/2);
-	float tanAlfa = ratio * tanBeta;
+    float tanY = tan(fov * 0.5f);
+    float tanX = ratio * tanY;
+
 	// Z projection ratios
     float K = far / (near - far);
-    float L = near * far / (near - far);
-	Matrix<float> output = {
-		{1/tanAlfa, 0, 0, 0},
-		{0, 1/tanBeta, 0, 0},
-		{0, 0, K, L},
-		{0, 0, -1, 0}
-	};
-	return output;
+    float L = (far * near) / (near - far);
+
+    Matrix<float> m = {
+        {1.0f / tanX, 0, 0, 0},
+        {0, 1.0f / tanY, 0, 0},
+        {0, 0, K, L},
+        {0, 0, -1, 0}
+    };
+
+    return m;
 }
