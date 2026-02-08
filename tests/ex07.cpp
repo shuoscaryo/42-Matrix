@@ -23,6 +23,47 @@ void mul_matHelper(Matrix<T> A, Matrix<T> B)
 
 void myTests()
 {
+	Test::header("my tests");
+	Test::add("1x1 matrix * vector(1)",
+        mul_vecHelper<float>,
+        Matrix<float>{{2}},
+        Vector<float>{3}
+    );
+	Test::add("0x0 matrix * vector(1)",
+        mul_vecHelper<float>,
+        Matrix<float>{{}},
+        Vector<float>{3}
+    );
+	Test::add("0x0 matrix * vector(1)",
+        mul_vecHelper<float>,
+        Matrix<float>{{}},
+        Vector<float>{}
+    );
+	Test::add("INVALID matrix 2x2 * vector(3)",
+        mul_vecHelper<float>,
+        Matrix<float>{{1,0},{0,1}},
+        Vector<float>{1,2,3}
+    );
+    Test::add("1x1 * 1x1",
+        mul_matHelper<float>,
+        Matrix<float>{{2}},
+        Matrix<float>{{4}}
+    );
+    Test::add("1x1 * 1x1",
+        mul_matHelper<float>,
+        Matrix<float>{{}},
+        Matrix<float>{{4}}
+    );
+    Test::add("1x1 * 1x1",
+        mul_matHelper<float>,
+        Matrix<float>{{}},
+        Matrix<float>{{}}
+    );
+    Test::add("INVALID 2x3 * 2x2",
+        mul_matHelper<float>,
+        Matrix<float>{{1,2,3},{4,5,6}},
+        Matrix<float>{{1,0},{0,1}}
+    );
 }
 
 void subjectTests()
