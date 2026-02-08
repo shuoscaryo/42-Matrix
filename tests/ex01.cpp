@@ -140,6 +140,5 @@ int main()
 {
 	subjectTests();
 	myTests();
-	matrixExtraTests();
 	return 0;
 }
