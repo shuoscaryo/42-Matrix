@@ -16,10 +16,20 @@ void cosHelper(Vector<T> u, Vector<T> v)
 void myTests()
 {
 	Test::header("cosine product my tests");
-	Test::add("",
+	Test::add("3D non-trivial",
 		cosHelper<float>,
 		Vector<float>{1,1,1},
 		Vector<float>{1,1,-2}
+	);
+	Test::add("zero vector should fail",
+		cosHelper<float>,
+		Vector<float>{0,0,0},
+		Vector<float>{1,2,3}
+	);
+	Test::add("invalid dimension should fail",
+		cosHelper<float>,
+		Vector<float>{1,0,0},
+		Vector<float>{1,0}
 	);
 }
 

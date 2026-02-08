@@ -378,7 +378,11 @@ float angle_cos(const Vector<T> & u, const Vector<T> & v)
 {
 	// dot(U,V) = mod(U) * mod(V) * cos(O)
 	// cos = dot(U,V) / (mod(U) * mod(V))
-	return u.dot(v) / (u.norm() * v.norm());
+	T normV = v.norm();
+	T normU = u.norm();
+	if (normV * normU == 0)
+		throw std::invalid_argument("Vector::angle_cos division by zero D:");
+	return u.dot(v) / (normU * normV);
 }
 
 // EX06
