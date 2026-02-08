@@ -4,7 +4,7 @@ CFLAGS := -Wall -Wextra -Werror -std=c++14
 SRC_FOLDER := src
 TESTS_FOLDER := tests
 
-SRC_FILES := Complex.cpp
+SRC_FILES := Complex.cpp Test.cpp
 TPP_FILES := Matrix.tpp Vector.tpp Test.tpp
 SRC_CPP := $(addprefix $(SRC_FOLDER)/,$(SRC_FILES))
 SRC_TPP := $(addprefix $(SRC_FOLDER)/,$(TPP_FILES))
