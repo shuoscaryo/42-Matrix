@@ -15,6 +15,32 @@ void crossHelper(Vector<T> u, Vector<T> v)
 
 void myTests()
 {
+	Test::header("my tests");
+	Test::add("orthogonal x y",
+		crossHelper<float>,
+		Vector<float>{1,0,0},
+		Vector<float>{0,1,0}
+	);
+	Test::add("orthogonal y z",
+		crossHelper<float>,
+		Vector<float>{0,1,0},
+		Vector<float>{0,0,1}
+	);
+	Test::add("parallel vectors",
+		crossHelper<float>,
+		Vector<float>{1,2,3},
+		Vector<float>{2,4,6}
+	);
+	Test::add("opposite vectors",
+		crossHelper<float>,
+		Vector<float>{1,0,0},
+		Vector<float>{-1,0,0}
+	);
+	Test::add("invalid dimension",
+		crossHelper<float>,
+		Vector<float>{1,0},
+		Vector<float>{0,1}
+	);
 }
 
 void subjectTests()
