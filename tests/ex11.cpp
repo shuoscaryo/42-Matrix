@@ -15,7 +15,7 @@ void helper(const Matrix<T> & A)
 void myTests()
 {
 	Test::header("my tests");
-	Test::add("",
+	Test::add("Only diagonal part",
 		helper<float>,
 		Matrix<float>{
 			{1, 0, 0},
@@ -23,7 +23,7 @@ void myTests()
 			{1, 2, 3},
 		}
 	);
-	Test::add("",
+	Test::add("Non square matrix, should crash",
 		helper<float>,
 		Matrix<float>{
 			{1, 0, 0},
@@ -32,7 +32,7 @@ void myTests()
 			{2, 3, 1}
 		}
 	);
-	Test::add("",
+	Test::add("Identity matrix",
 		helper<float>,
 		Matrix<float>{
 			{1, 0, 0},
@@ -40,14 +40,14 @@ void myTests()
 			{0, 0, 1}
 		}
 	);
-	Test::add("",
+	Test::add("normal 2D",
 		helper<float>,
 		Matrix<float>{
 			{1, 2},
 			{3, 4}
 		}
 	);
-	Test::add("",
+	Test::add("colineal 2D vectors",
 		helper<float>,
 		Matrix<float>{
 			{1, 2},
