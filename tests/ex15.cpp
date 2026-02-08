@@ -81,7 +81,7 @@ void linearCombTest(
 
 void TestsEx01()
 {
-	Test::header("Tests Ex01");
+	Test::header("Tests Ex01: linear_combination");
 	Test::add("",
         linearCombTest<Complex>,
         std::initializer_list<Vector<Complex>>{
@@ -115,7 +115,7 @@ void lerpHelper(const V &u, const V &v, float t)
 
 void TestsEx02()
 {
-    Test::header("Tests Ex02");
+    Test::header("Tests Ex02: lerp");
     Test::add("",
         []() -> void {
             Vector<Complex> u{
@@ -159,16 +159,26 @@ void dotHelper(Vector<T> u, const Vector<T> &v)
 {
 	std::cout << "u: " << ivp(u) << "\n";
 	std::cout << "v: " << ivp(v) << "\n";
-	std::cout << "u.dot(v): " << u.dot(v) << "\n";
+	std::cout << "u.complexDot(v): " << u.complexDot(v) << "\n";
 }
 
 void TestsEx03()
 {
-    Test::header("Tests Ex03");
+    Test::header("Tests Ex03: complexDot");
 	Test::add("",
 		dotHelper<Complex>,
-		Vector<float>{0,0},
-		Vector<float>{1,1}
+		Vector<Complex>{1,1},
+		Vector<Complex>{1,1}
+	);
+	Test::add("",
+		dotHelper<Complex>,
+		Vector<Complex>{1,0},
+		Vector<Complex>{0,1}
+	);
+	Test::add("",
+		dotHelper<Complex>,
+		Vector<Complex>{1,0},
+		Vector<Complex>{0.707,0.707}
 	);
 }
 

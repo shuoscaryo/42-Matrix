@@ -5,7 +5,7 @@ Complex::Complex(void):
 	_r(0), _i(0)
 {}
 
-Complex::Complex(float real, float imaginary):
+Complex::Complex(double real, double imaginary):
 	_r(real), _i(imaginary)
 {}
 
@@ -16,6 +16,17 @@ Complex::Complex(const Complex & src)
 
 Complex::~Complex()
 {}
+
+double Complex::real() const
+{
+	return _r;
+}
+
+double Complex::imag() const
+{
+	return _i;
+}
+
 
 Complex &Complex::operator=(const Complex &rhs)
 {

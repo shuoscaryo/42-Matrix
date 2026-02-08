@@ -7,11 +7,14 @@ class Complex
 	// Constructors and destructor
 
 		Complex(void);
-		Complex(float real, float imaginary = 0);
+		Complex(double real, double imaginary = 0);
 		Complex(const Complex & src);
 		~Complex();
 
 	// Setters and getters
+
+		double real() const;
+		double imag() const;
 		
 	// Member functions
 
@@ -26,8 +29,8 @@ class Complex
 	private:
 	// Atributes
 
-		float _r;
-		float _i;
+		double _r;
+		double _i;
 
 	// Private member functions
 
