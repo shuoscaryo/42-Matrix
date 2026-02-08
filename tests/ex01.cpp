@@ -134,6 +134,14 @@ void myTests()
 		},
 		std::initializer_list<float>{0.5, 0.5}
 	);
+	Test::add("Different vector sizes",
+		linearCombTest<float>,
+		std::initializer_list<Vector<float>>{
+			Vector<float>{1,2},
+			Vector<float>{1,2,3}
+		},
+		std::initializer_list<float>{1, 1}
+	);
 }
 
 int main()
