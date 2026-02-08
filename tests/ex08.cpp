@@ -14,6 +14,26 @@ void helper(const Matrix<T> & A)
 
 void myTests()
 {
+	Test::header("My tests");
+	Test::add("size 1",
+		helper<float>,
+		Matrix<float>{
+			{1},
+		}
+	);
+	Test::add("size 0",
+		helper<float>,
+		Matrix<float>{
+			{},
+		}
+	);
+	Test::add("Non square, should crash",
+		helper<float>,
+		Matrix<float>{
+			{1, 2, 3},
+			{4, 5, 6},
+		}
+	);
 }
 
 void subjectTests()

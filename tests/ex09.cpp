@@ -15,13 +15,13 @@ void helper(const Matrix<T> & A)
 void myTests()
 {
 	Test::header("my tests");
-	Test::add("",
+	Test::add("1x3 matrix",
 		helper<float>,
 		Matrix<float>{
 			{1,2,3},
 		}
 	);
-	Test::add("",
+	Test::add("3x1 matrix",
 		helper<float>,
 		Matrix<float>{
 			{1},
@@ -29,14 +29,14 @@ void myTests()
 			{3},
 		}
 	);
-	Test::add("",
+	Test::add("2x3 matrix",
 		helper<float>,
 		Matrix<float>{
 			{1, 2, 3},
 			{4, 5, 6},
 		}
 	);
-	Test::add("",
+	Test::add("Identity",
 		helper<float>,
 		Matrix<float>{
 			{1, 0, 0},
