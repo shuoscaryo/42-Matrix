@@ -10,8 +10,8 @@ void helper(float fov, float ratio, float near, float far)
 {
 	float fovRad = fov / 180.0 * M_PI;
 	Matrix<float> A = projection(fovRad, ratio, near, far);
-	std::cout << "fov: " << fov * 180/M_PI << "º ,ratio: " << ratio << " ,near: "
-		<< near << " ,far: " << far << "\n";
+	std::cout << "fov: " << fov << "º, ratio: " << ratio << ", near: "
+		<< near << ", far: " << far << "\n";
 	std::cout << "projection matrix:\n";
 	for (size_t row = 0; row < A.shape().first; ++row)
 	{
@@ -45,14 +45,8 @@ void myTests()
 	);
 }
 
-void subjectTests()
-{
-	Test::header("subject tests");
-}
-
 int main()
 {
-	subjectTests();
 	myTests();
 	return 0;
 }
