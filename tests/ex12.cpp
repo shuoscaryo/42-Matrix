@@ -15,26 +15,26 @@ void helper(const Matrix<T> & A)
 void myTests()
 {
 	Test::header("my tests");
-	Test::add("",
+	Test::add("Should Crash singular matrix",
 		helper<float>,
 		Matrix<float>{
 			{1, 1},
 			{1, 1}
 		}
 	);
-	Test::add("",
+	Test::add("1x1 matrix value 1",
 		helper<float>,
 		Matrix<float>{
 			{1},
 		}
 	);
-	Test::add("",
+	Test::add("1x1 matrix value 2",
 		helper<float>,
 		Matrix<float>{
 			{2},
 		}
 	);
-	Test::add("",
+	Test::add("Simetry matrix inverse",
 		helper<float>,
 		Matrix<float>{
 			{0, 0, 1},
