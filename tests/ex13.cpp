@@ -12,6 +12,34 @@ void helper(const Matrix<T> & A)
 	std::cout << "A.rank(): " << A.rank() << "\n";
 }
 
+void myTests()
+{
+	Test::header("my tests");
+	Test::add("rank zero matrix",
+		helper<float>,
+		Matrix<float>{
+			{0,0,0},
+			{0,0,0},
+			{0,0,0}
+		}
+	);
+	Test::add("rank repeated rows",
+		helper<float>,
+		Matrix<float>{
+			{1,2,3},
+			{1,2,3}
+		}
+	);
+	Test::add("rank linear combination",
+		helper<float>,
+		Matrix<float>{
+			{1, 0, 2},
+			{0, 1, 3},
+			{1, 1, 5} // = row0 + row1
+		}
+	);
+}
+
 void subjectTests()
 {
 	Test::header("subject tests");
@@ -41,5 +69,6 @@ void subjectTests()
 int main()
 {
 	subjectTests();
+	myTests();
 	return 0;
 }
